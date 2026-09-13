@@ -1,16 +1,40 @@
 http://localhost:5000/overlay.html?veld=Mix2x
+http://localhost:5000/startlist.html?veld=Mix2x
 http://localhost:5000/live.html?veld=Mix2x
 
 Beschikbare browsersource-varianten:
-1. Eindscherm: http://localhost:5000/overlay.html?veld=Mix2x
-2. Live timetrial: http://localhost:5000/live.html?veld=Mix2x
+1. Eindscherm timetrial: http://localhost:5000/overlay.html?veld=Mix2x
+2. Startlijst: http://localhost:5000/startlist.html?veld=Mix2x
+3. Live timetrial: http://localhost:5000/live.html?veld=Mix2x
 
-Extra velden kunnen worden gekozen door de querystring ?veld=... te wijzigen, bijvoorbeeld:
-http://localhost:5000/overlay.html?veld=HC4+
-http://localhost:5000/live.html?veld=HC4+
+Beschikbare velden uit de actuele /api/dashboard bron:
+http://localhost:5000/overlay.html?veld=Mix2x
+http://localhost:5000/startlist.html?veld=Mix2x
+http://localhost:5000/live.html?veld=Mix2x
+http://localhost:5000/overlay.html?veld=HC4%2B
+http://localhost:5000/startlist.html?veld=HC4%2B
+http://localhost:5000/live.html?veld=HC4%2B
+http://localhost:5000/overlay.html?veld=DC4%2B
+http://localhost:5000/startlist.html?veld=DC4%2B
+http://localhost:5000/live.html?veld=DC4%2B
+http://localhost:5000/overlay.html?veld=HC2%2B
+http://localhost:5000/startlist.html?veld=HC2%2B
+http://localhost:5000/live.html?veld=HC2%2B
 http://localhost:5000/overlay.html?veld=H2x
+http://localhost:5000/startlist.html?veld=H2x
 http://localhost:5000/live.html?veld=H2x
-http://localhost:5000/overlay.html?veld=HC2+
-http://localhost:5000/live.html?veld=HC2+
-http://localhost:5000/overlay.html?veld=O1x
-http://localhost:5000/live.html?veld=O1x
+http://localhost:5000/overlay.html?veld=O1x%20(Hoofdnummer)
+http://localhost:5000/startlist.html?veld=O1x%20(Hoofdnummer)
+http://localhost:5000/live.html?veld=O1x%20(Hoofdnummer)
+
+Mode-routes uit de actuele dashboard API:
+http://localhost:5000/overlay.html?veld=Mix2x
+http://localhost:5000/overlay.html?veld=Mix2x&cat=Mix2xFA
+http://localhost:5000/overlay.html?veld=HC4%2B&cat=HC4%2BFA
+http://localhost:5000/overlay.html?veld=HC4%2B&cat=HC4%2BFB
+http://localhost:5000/overlay.html?veld=DC4%2B&cat=DC4%2BFA
+http://localhost:5000/overlay.html?veld=H2x&cat=H2xFA
+http://localhost:5000/overlay.html?veld=O1x%20(Hoofdnummer)&cat=O1x%20(Hoofdnummer)FA
+http://localhost:5000/overlay.html?veld=O1x%20(Hoofdnummer)&cat=O1x%20(Hoofdnummer)FB
+http://localhost:5000/overlay.html?veld=O1x%20(Hoofdnummer)&cat=O1x%20(Hoofdnummer)FC
+http://localhost:5000/overlay.html?veld=O1x%20(Hoofdnummer)&cat=O1x%20(Hoofdnummer)FD

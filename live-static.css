@@ -28,8 +28,7 @@ body {
   background: var(--live-bg);
   border: 1px solid var(--live-line);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 31, 76, 0.7);
-  overflow: visible;
-  position: relative;
+  overflow: hidden;
 }
 
 .live-topbar {
@@ -86,9 +85,9 @@ body {
 
 .live-summary-row {
   display: grid;
-  grid-template-columns: 88px minmax(90px, 1fr) minmax(70px, 1fr) 56px 72px;
+  grid-template-columns: 88px minmax(90px, 1fr) minmax(70px, 1fr) 56px 58px;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   min-height: 30px;
   border-bottom: 1px solid rgba(234, 247, 255, 0.18);
 }
@@ -135,15 +134,11 @@ body {
   font-weight: 800;
   color: var(--live-text);
   text-align: center;
-  padding: 3px 8px;
+  padding: 3px 6px;
   border-radius: 4px;
   background: rgba(234, 247, 255, 0.12);
-  min-width: 48px;
-  justify-self: start;
-  margin-left: 10px;
-  position: relative;
-  transform: translateX(16px);
-  z-index: 3;
+  min-width: 44px;
+  justify-self: end;
 }
 
 .live-summary-diff-fast {
