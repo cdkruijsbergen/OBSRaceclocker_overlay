@@ -1,0 +1,458 @@
+
+<!doctype html>
+<html lang="en_US.UTF-8">
+
+<head>
+    <title>Strijkbokaal start list</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="keywords" content="race timing, sports timing, rowing, running, cycling, time trial, trail running, mountainbiking, timer, stopwatch, enduro, regatta, parkrun">
+    <meta name="description" content="RaceClocker is a do-it-yourself tool for manual timing of sports races. Our app offers an easy and fast alternative to chip timing or stopwatches."/>
+    <meta property="og:title" content="Strijkbokaal"/>
+
+    <link href="css/RC_Style.css?v=1.2" rel="stylesheet" type="text/css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body style='padding-top: 0'>
+
+
+<div class="ContentDarkResp">
+    <div class="MessageBlue" id="feedback" style="display: none;"></div>
+    <div id="EventHead" class="EventHead"><div class="EventHeadMap"><a href="https://www.google.com/maps/search/?api=1&query=52.51543,6.08576" target="_blank"><img class="EventHeadThumbnail" src=https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/static/6.08576,52.51543,14/96x96@2x?access_token=pk.eyJ1IjoiY2Vlc2llIiwiYSI6ImNsYzA5NWQ5djAyN3QzcnBidmh6OXFjOTUifQ.I3pWdhrDnugZJ6irskAWPA&logo=false&attribution=false></a><div id="weather_widget" class="WeatherWidget" style="display: none;"><img id="weather_condition" src="img/img_icon_weather_clear.svg" style="width:24px; height:24px; display:block;" alt="Weather condition"><div style="display: flex; gap: 2px; align-items: baseline"><span id="weather_temperature"></span><span id="weather_tempunit" class="Type_grey_8"></span></div><img id="weather_winddirection" src="img/img_icon_windarrow.svg" style="width:10px; height:26px; transform-origin: center center; display:block;" alt="Wind direction arrow"><div style="display: flex; gap: 2px; align-items: baseline"><span id="weather_windspeed"></span><span id="weather_windunit" class="Type_grey_8"></span></div></div><div class="DropDownMenu" id="weather_widget_menu" style="display: none;"></div></div><div class="EventDetailsColumn"><div class="EventDetailsRow RowWidthWithThumbnail"><span id="pagetitle" class="Title_large_white NoWrap">Strijkbokaal</span></div><div class="EventDetailsRow RowWidthWithThumbnail"><img id="sporticon" width="32px" style="position:relative; top:-2px" src="img/icon_sports_rowing.svg"><span class="Type_white_10 NoWrap">250 m Rowing</span><span class="Type_white_10_transparent NoWrap">Time trial </span></div><div class="EventDetailsRow RowWidthWithThumbnail"><span class="Type_white_10 NoWrap">Saturday 26 Sep '26, 10:00</span><span><a href=https://zsrboreas.nl/strijkbokaal>website</a></span></div></div></div><div class="VerticalSpacerHalf"></div></div>
+
+<div class="ContentResp">
+    <div id="tool_bar" class="ToolBar" style="display:none;">
+        <div class="ToolBarGreyButton ToClipboard" id="btn_link_public" title="Public link for sharing the start list" data-clipboard-text="www.raceclocker.com/0790c73f-startlist"><img class="ButtonIcon" src="img/img_icon_share.svg" width="24" height="24">Share</div>        <div style="position: relative">
+            <input class="Field FieldIconSearch" type="text" value="" name="fld_filter" id="fld_filter" placeholder="Find..." style="width: 150px;">
+            <img id="fld_filter_clear" class="FieldIconSearchClear" src="img/img_icon_cancel.svg" width="24" height="24">
+        </div>
+
+    </div>
+</div>
+
+<div class="ContentResp" id="content" style="display: none">
+    <div class="HorizontalScrollWrapper">
+        <div class="FlRow FlRowHeader"><div class="FlColumn FlColHalf ColumnBibHeader Type_darkblue_10_bold"><div>Bow nr</div></div><div class="FlColumn FlColOneAndHalf ColumnNameHeader Type_darkblue_10_bold"><div>Name</div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader Type_darkblue_10_bold"><div>Category</div></div><div class="FlColumn FlColOne ColumnCustomHeader Type_darkblue_10_bold"><div>Custom</div></div><div class="FlColumn FlColHalf ColumnAgeHeader Type_darkblue_10_bold"><div>Age</div></div><div class="FlColumn FlColOne ColumnGenderHeader Type_darkblue_10_bold"><div>Gender</div></div><div class="FlColumn FlColOne ColumnHandicapHeader Type_darkblue_10_bold"><div>Handicap</div></div></div><div class="DottedLineDark"></div><div id="racelist"><div class="RowToSort" id="row_1848457"><div class="FlRow" id="row_content_1848457"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Katja's Overdreven Strijkers</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>Mix2x</div><div>&middot;</div><div class='LineClub'>Phocas/Th├¬ta</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">Mix2x</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848472"><div class="FlRow" id="row_content_1848472"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Strijkend tegen stromend water</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>Mix2x</div><div>&middot;</div><div class='LineClub'>Agon</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">Mix2x</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader"></div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848460"><div class="FlRow" id="row_content_1848460"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Dorstige Damherten</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+</div><div>&middot;</div><div class='LineClub'>Euros</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848458"><div class="FlRow" id="row_content_1848458"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Strijkend ten onder Fossielen</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848462"><div class="FlRow" id="row_content_1848462"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Spiegeltje aan de Waal</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>DC4+</div><div>&middot;</div><div class='LineClub'>Phocas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">DC4+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848474"><div class="FlRow" id="row_content_1848474"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Strijkend ten onder</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC2+</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC2+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader"></div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848483"><div class="FlRow" id="row_content_1848483"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Boreas 6</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC2+</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC2+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848454"><div class="FlRow" id="row_content_1848454"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Euros Club</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>H2x</div><div>&middot;</div><div class='LineClub'>Euros</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">H2x</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848455"><div class="FlRow" id="row_content_1848455"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Oud-Boreas</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>H2x</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">H2x</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848459"><div class="FlRow" id="row_content_1848459"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Strijkend ten onder minder fossiel</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848461"><div class="FlRow" id="row_content_1848461"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Go Go Power Rowers</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+</div><div>&middot;</div><div class='LineClub'>Orca</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848463"><div class="FlRow" id="row_content_1848463"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Zwolsche</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+</div><div>&middot;</div><div class='LineClub'>Zwolsche</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1743301"><div class="FlRow" id="row_content_1743301"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Componel</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848449"><div class="FlRow" id="row_content_1848449"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">The Barge</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Phocas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848448"><div class="FlRow" id="row_content_1848448"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Tristan Mu├¡r</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Th├¬ta</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848451"><div class="FlRow" id="row_content_1848451"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Slayyy</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Nereus</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848450"><div class="FlRow" id="row_content_1848450"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Magnus Polus</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Gyas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848452"><div class="FlRow" id="row_content_1848452"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Ik strijk jullie allemaal de moeder!</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Gerben Rink</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848453"><div class="FlRow" id="row_content_1848453"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">V├®ronique Hehl</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)</div><div>&middot;</div><div class='LineClub'>Saurus</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848473"><div class="FlRow" id="row_content_1848473"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Katja's overdreven Strijkers</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>Mix2xFA</div><div>&middot;</div><div class='LineClub'>Phocas/Th├¬ta</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">Mix2xFA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader"></div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848456"><div class="FlRow" id="row_content_1848456"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Strijkend tegen stromend water</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>Mix2xFA</div><div>&middot;</div><div class='LineClub'>Agon</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">Mix2xFA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848475"><div class="FlRow" id="row_content_1848475"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Boreas 6</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC2+</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC2+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader"></div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848482"><div class="FlRow" id="row_content_1848482"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Strijkend ten onder</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC2+</div><div>&middot;</div><div class='LineClub'>Boreas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC2+</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848476"><div class="FlRow" id="row_content_1848476"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">Spiegeltje aan de Waal</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>DC4+FA</div><div>&middot;</div><div class='LineClub'>Phocas</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">DC4+FA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848477"><div class="FlRow" id="row_content_1848477"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FB1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+FB</div><div>&middot;</div><div class='LineClub'>FB</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+FB</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848478"><div class="FlRow" id="row_content_1848478"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FB2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+FB</div><div>&middot;</div><div class='LineClub'>FB</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+FB</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848479"><div class="FlRow" id="row_content_1848479"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FA1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+FA</div><div>&middot;</div><div class='LineClub'>FA</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+FA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848480"><div class="FlRow" id="row_content_1848480"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FA2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>HC4+FA</div><div>&middot;</div><div class='LineClub'>FA</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">HC4+FA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848484"><div class="FlRow" id="row_content_1848484"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FA1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>H2xFA</div><div>&middot;</div><div class='LineClub'>FA</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">H2xFA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848485"><div class="FlRow" id="row_content_1848485"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FA2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>H2xFA</div><div>&middot;</div><div class='LineClub'>FA</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">H2xFA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848465"><div class="FlRow" id="row_content_1848465"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FD1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FD</div><div>&middot;</div><div class='LineClub'>FD</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FD</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader"></div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848481"><div class="FlRow" id="row_content_1848481"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FD2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FD</div><div>&middot;</div><div class='LineClub'>FD</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FD</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848466"><div class="FlRow" id="row_content_1848466"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FC1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FC</div><div>&middot;</div><div class='LineClub'>FC</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FC</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848467"><div class="FlRow" id="row_content_1848467"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FC2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FC</div><div>&middot;</div><div class='LineClub'>FC</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FC</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848469"><div class="FlRow" id="row_content_1848469"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FB1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FB</div><div>&middot;</div><div class='LineClub'>FB</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FB</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848468"><div class="FlRow" id="row_content_1848468"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FB2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FB</div><div>&middot;</div><div class='LineClub'>FB</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FB</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848470"><div class="FlRow" id="row_content_1848470"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FA1</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FA</div><div>&middot;</div><div class='LineClub'>FA</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div><div class="RowToSort" id="row_1848471"><div class="FlRow" id="row_content_1848471"><div class="FlColumn FlColHalf ColumnBibHeader RightAlign"><span class="BibBorder Large"></span></div><div class="FlColumn FlColOneAndHalf Name"><div class="NoWrap"><span class="Type_black_10" style="margin-right: 8px;">FA2</span></div><div class="Type_grey_8 LineCatClub ResultDetailsShowHide"><div class='LineCategory'>O1x (Hoofdnummer)FA</div><div>&middot;</div><div class='LineClub'>FA</div></div></div><div class="FlColumn FlColOneAndHalf ColumnCategoryHeader">O1x (Hoofdnummer)FA</div><div class="FlColumn FlColOne ColumnCustomHeader"></div><div class="FlColumn FlColHalf ColumnAgeHeader"></div><div class="FlColumn FlColOne ColumnGenderHeader">Man</div><div class="FlColumn FlColOne ColumnHandicapHeader">1.000</div></div><div class="FlRow"><div class="FlColumn DottedLine"></div></div></div></div>
+        <div class="ListNote" id="note_2543_0"><div class="FlColumn ListGroupHeader Note Red" id="notetext_2543">Vergeet niet de stuurliedeninstructie bij te wonen!</div></div><div class="ListNote" id="note_2530_0"><div class="FlColumn ListGroupHeader Note Green" id="notetext_2530">Blok 1 voorwedstrijden (400m roeiend & 250m strijkend)</div></div><div class="ListNote" id="note_2531_7"><div class="FlColumn ListGroupHeader Note Green" id="notetext_2531">Blok 2 voorwedstrijden (400m roeiend & 250m strijkend)</div></div><div class="ListNote" id="note_2529_12"><div class="FlColumn ListGroupHeader Note Green" id="notetext_2529">Blok 3 Skiff Hoofdnummer voorwedstrijd (500m)</div></div><div class="ListNote" id="note_2534_19"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2534">A Finale Mix2x</div></div><div class="ListNote" id="note_2532_19"><div class="FlColumn ListGroupHeader Note Green" id="notetext_2532">Blok 4 Finales gewone nummers (250m boord aan boord)</div></div><div class="ListNote" id="note_2535_21"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2535">A Finale HC2+</div></div><div class="ListNote" id="note_2536_23"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2536">A Finale DC4+</div></div><div class="ListNote" id="note_2537_24"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2537">B Finale HC4+</div></div><div class="ListNote" id="note_2538_26"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2538">A Finale HC4+</div></div><div class="ListNote" id="note_2544_28"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2544">A Finale H2x</div></div><div class="ListNote" id="note_2539_30"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2539">D finale O1x</div></div><div class="ListNote" id="note_2533_30"><div class="FlColumn ListGroupHeader Note Green" id="notetext_2533">Blok 5 01x Hoofdnummer (250m boord aan boord)</div></div><div class="ListNote" id="note_2540_32"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2540">C Finale O1x</div></div><div class="ListNote" id="note_2541_34"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2541">B Finale O1x</div></div><div class="ListNote" id="note_2542_36"><div class="FlColumn ListGroupHeader Note Blue" id="notetext_2542">A Finale O1x</div></div>    </div>
+</div>
+
+<dialog class="ModalDialog Centered" id="dialog_share">
+    <p id="clipboard_message" class="Type_black_10"></p>
+    <div class="VerticalSpacer"></div>
+    <div class="ToolBarGreyButton" id="btn_close_dialog_share"><img class="ButtonIcon" src="img/img_icon_cancel.svg">Close</div>
+</dialog>
+
+<dialog class="ModalDialog Centered" id="dialog_extra_info">
+    <div id="extra_info"></div>
+    <div class="VerticalSpacer"></div>
+    <div class="ToolBarGreyButton" id="btn_close_dialog_extra_info"><img class="ButtonIcon" src="img/img_icon_cancel.svg">Close</div>
+</dialog>
+
+
+
+<script type="text/javascript" src="js/clipboard.min.js"></script>
+<script type="text/javascript" src="js/goosabilla.js"></script>
+<script type="text/javascript" src="js/MainNavTabs.js"></script>
+<script type="text/javascript">
+
+    let ShowCat = 1;
+    let ShowBib = 0;
+    let ShowCustom = 0;
+    let ShowAge = 0;
+    let ShowGender = 0;
+    let ShowClub = 1;
+    let ShowHandicap = 1;
+    let Current_RaceID = 0;
+    let Current_WaveID = 0;
+    let Current_BibID = 0; // for autonumbering
+    let myContentBefore = ""; // check if db update is needed
+    let myColumn = "";
+    let HasWaves = 0;
+    let ViewStartListByCategory = 0;
+    let gWavesCollapsed = 0;
+    let gCategoriesCollapsed = 0;
+    let Bib_Label = "Bow nr";
+    let Waves = [];// ordered list of waveIDs
+    let Categories = []; //ordered list of CategoryIDs
+    let Races = []; // ordered list of raceIDs (row_x)
+    let BibNumbers = []; // ordered list of bib numbers
+    let Notes = []; // list of notes
+    let ExtraInfoAllRaces = [];
+    let clipboard = new Clipboard('.ToClipboard'); // copy results link to clipboard
+    let dialog_share = document.getElementById('dialog_share');
+    let dialog_extra_info = document.getElementById('dialog_extra_info');
+
+
+    $(document).ready(function () {
+
+        dialog_share.close();
+        dialog_extra_info.close();
+
+        SetStartView();
+
+        // update page title
+        title = $("#pagetitle").text()
+        postfix = "start list"
+        $("#pagetitle").text(title + " " + postfix)
+
+        // init Wave ID list
+        if (HasWaves) {
+            $('.WaveGroup').each(function() {
+                Waves.push($(this).parent().attr('id'));
+            });
+            // console.log(Waves);
+        }
+
+        //init Category ID list
+        if (ViewStartListByCategory) {
+            Categories = []
+            $('.CategoryGroup').each(function() {
+                Categories.push($(this).parent().attr('id'));
+            });
+            // console.log(Categories);
+        }
+
+        $(window).on('resize', function(){
+            SetListViewWidth()
+        });
+
+        $("#fld_filter").on("input", function() {
+            filter_text = $(this).val().toLowerCase();
+
+            if ((ViewStartListByCategory || HasWaves) && filter_text !== "") { // hide headers and containers
+                $(".ListGroupHeader").hide()
+                $(".CategoryGroup").hide()
+                $(".WaveGroup").hide()
+            }
+
+            if (filter_text == "") { // hide notes when filtering
+                $(".ListGroupHeader.Note").show()
+            } else {
+                $(".ListGroupHeader.Note").hide()
+            }
+
+            $(".RowToSort").each(function(){
+                row_text = $(this).find("div:first-child").find("div:not('.ColumnCategory')").text().toLowerCase(); // find content excluding dropdown
+                row_text += $(this).find(".ColumnCategory option:selected").text().toLowerCase(); // selected dropdown text
+                if (row_text.indexOf(filter_text) >=0) {
+                    $(this).show();
+                    if (ViewStartListByCategory || HasWaves) {
+                        $(this).parent().show(); // categorygroup
+                        $(this).parent().prev().show(); // groupheader
+                    }
+                } else {
+                    $(this).hide();
+                }
+            })
+        });
+
+        $("#fld_filter_clear").click(function(){
+            $("#fld_filter").val("").trigger("input")
+        })
+
+
+        // expand and collapse individual groups
+        $(document).on('mouseenter', '.ListGroupHeader.Category, .ListGroupHeader.Wave', function(){
+            img_name = $(this).find(".CategoryCounterIcon, .WaveCounterIcon").attr('src');
+            img_name = img_name.replace('.svg', '_hot.svg');
+            $(this).find(".CategoryCounterIcon, .WaveCounterIcon").attr('src', img_name);
+            $(this).css("background-color", "var(--grey-dark)");
+        })
+
+        $(document).on('mouseleave', '.ListGroupHeader.Category, .ListGroupHeader.Wave', function(){
+            img_name = $(this).find(".CategoryCounterIcon, .WaveCounterIcon").attr('src');
+            img_name = img_name.replace('_hot.svg', '.svg');
+            $(this).find(".CategoryCounterIcon, .WaveCounterIcon").attr('src', img_name);
+            $(this).css("background-color", "var(--grey-lessdark)")
+        })
+
+        $(document).on('click', '.ListGroupHeader.Category', function() {
+            fullID =  $(this).find(".CategoryCounter").attr('id');
+            id = fullID.substring(fullID.lastIndexOf("_")+1);
+            itemtoshowhide = "#category_group_" + id; // select wave to show/hide
+
+            if ($(itemtoshowhide).css('display')=='none') {
+                $(itemtoshowhide).show(); //show
+                $('#category_count_' + id).find("img").attr('src', 'img/img_icon_bar_collapse.svg');
+            } else {
+                $(itemtoshowhide).hide(); // hide
+                count = $(itemtoshowhide + '> div').not('#frm_addrace').length; // include counter to indicate collapsed state (skip form row)
+                // $('#category_count_' + id + ' span').text("(" + count + ")");
+                $('#category_count_' + id).find("img").attr('src', 'img/img_icon_bar_expand.svg');
+            }
+        })
+
+        $(document).on('click', '.ListGroupHeader.Wave', function() {
+            fullID =  $(this).find(".WaveCounter").attr('id');
+            id = fullID.substring(fullID.lastIndexOf("_")+1);
+            itemtoshowhide = "#wave_group_" + id; // select wave to show/hide
+
+            if ($(itemtoshowhide).css('display')=='none') {
+                $(itemtoshowhide).show(); //show
+                $('#wave_count_' + id + ' span').text("");
+                $('#wave_count_' + id).find("img").attr('src', 'img/img_icon_bar_collapse.svg');
+            } else {
+                $(itemtoshowhide).hide(); // hide
+                count = $(itemtoshowhide + '> div').not('#frm_addrace').length; // include counter to indicate collapsed state (skip form row)
+                $('#wave_count_' + id + ' span').text("(" + count + ")");
+                $('#wave_count_' + id).find("img").attr('src', 'img/img_icon_bar_expand.svg');
+            }
+        })
+
+        // expand and collapse all groups
+        $("#categories_count_all, wave_count_all").mouseenter(function(){
+            img_name = $(this).find("img").attr('src');
+            img_name = img_name.replace('.svg', '_hot.svg');
+            $(this).find("img").attr('src', img_name);
+        })
+
+        $("#categories_count_all, wave_count_all").mouseleave(function(){
+            img_name = $(this).find("img").attr('src');
+            img_name = img_name.replace('_hot.svg', '.svg');
+            $(this).find("img").attr('src', img_name);
+        })
+
+        $("#categories_count_all").click(function(){
+
+            Categories.forEach(function(categoryname) {
+                id = categoryname.replace("category_","");
+                itemtoshowhide = "#category_group_" + id; // select wave to show/hide
+
+                if (gCategoriesCollapsed == 0) { // close all headers
+
+                    $(itemtoshowhide).hide(); // hide
+                    count = $(itemtoshowhide + '> div').not('#frm_addrace').length; // include counter to indicate collapsed state (skip form row)
+                    $('#category_count_' + id + ' span').text("(" + count + ")");
+                    $('#category_count_' + id).find("img").attr('src', 'img/img_icon_bar_expand.svg');
+
+                } else { // open all headers
+                    $(itemtoshowhide).show(); //show
+                    $('#category_count_' + id + ' span').text("");
+                    $('#category_count_' + id).find("img").attr('src', 'img/img_icon_bar_collapse.svg');
+                }
+            });
+
+            if (gCategoriesCollapsed == 0) { // toggle flag and icon
+                gCategoriesCollapsed = 1;
+                $('#categories_count_all').find("img").attr('src', 'img/img_icon_expand.svg');
+            } else {
+                gCategoriesCollapsed = 0;
+                $('#categories_count_all').find("img").attr('src', 'img/img_icon_collapse.svg');
+            }
+        })
+
+        $("#wave_count_all").click(function(){
+
+            Waves.forEach(function(wavename) {
+                id = wavename.replace("wave_","");
+                itemtoshowhide = "#wave_group_" + id; // select wave to show/hide
+
+                if (gWavesCollapsed == 0) { // close all headers
+
+                    $(itemtoshowhide).hide(); // hide
+                    count = $(itemtoshowhide + '> div').not('#frm_addrace').length; // include counter to indicate collapsed state (skip form row)
+                    $('#wave_count_' + id + ' span').text("(" + count + ")");
+                    $('#wave_count_' + id).find("img").attr('src', 'img/img_icon_bar_expand.svg');
+                    $('#wave_count_all').find("img").attr('src', 'img/img_icon_expand.svg');
+
+                } else { // open all headers
+                    $(itemtoshowhide).show(); //show
+                    $('#wave_count_' + id + ' span').text("");
+                    $('#wave_count_' + id).find("img").attr('src', 'img/img_icon_bar_collapse.svg');
+                    $('#wave_count_all').find("img").attr('src', 'img/img_icon_collapse.svg');
+                }
+            });
+
+            if (gWavesCollapsed == 0) { // toggle flag and icon
+                gWavesCollapsed = 1;
+                $('#wave_count_all').find("img").attr('src', 'img/img_icon_expand.svg');
+            } else {
+                gWavesCollapsed = 0;
+                $('#wave_count_all').find("img").attr('src', 'img/img_icon_collapse.svg');
+            }
+        })
+
+        clipboard.on('success', function (e) {
+            $("#clipboard_message").html("A public link to this start list<a href='https://www.raceclocker.com/0790c73f-startlist' target='_blank'>www.raceclocker.com/0790c73f-startlist</a>is copied to your clipboard.")
+
+            dialog_share.showModal();
+        });
+
+        $("#btn_close_dialog_share").click(function(){
+            dialog_share.close();
+        })
+
+        dialog_share.addEventListener('click', (function(e) { // close dialog on click outside
+                let rect = e.target.getBoundingClientRect();
+                if (rect.left > e.clientX || rect.right < e.clientX || rect.top > e.clientY || rect.bottom < e.clientY) {
+                    dialog_share.close();
+                }
+            })
+        );
+
+
+        $('.ListLink').click(function(){
+            RaceID = $(this).data('raceid');
+
+            // create header for dialog
+            Bib = "";
+            Club = "";
+            Category = "";
+            Name = "<div class='Type_black_10_bold'>" + $(this).text() + "</div>";
+            if (ShowBib) { Bib = "<div class='Type_black_10_bold BibBorder'>" + $(this).parent().parent().prev().text() + "</div>"; }
+            if (ShowClub) { Club = "<div class='Type_blue_10'>" + $(this).parent().next().find('.LineClub').text() + "</div>"; }
+            if (ShowCat) { Category = "<div class='Type_grey_10'>" + $(this).parent().next().find('.LineCategory').text() + "</div>"; }
+            $('#extra_info')
+                .html("") // clear
+                .append("<div class='FlRow Centered'>" + Bib + Name + "</div>") // add name and Bib // clear
+                .append("<div class='FlRow Centered'>" + Club + Category + "</div>") // add name and Bib // clear
+                .append("<div class='VerticalSpacerHalf'></div>");
+
+            // find extra info for RaceID
+            for (let i=0; i < ExtraInfoAllRaces.length; i++) {
+                if (ExtraInfoAllRaces[i][0] == RaceID) {
+                    extrainfo = ExtraInfoAllRaces[i][1];
+                    extrainfo.forEach(function(row){
+                        $('#extra_info').append("<div class='FlRow'><div class='Type_grey_8 FlColumn FlColHalf RightAlignText'>" + row[0]  + "</div><div class='Type_black_10 FlColumn FlColOneAndHalf Name LeftAlignText'>" + row[1]  + "</div></div>")
+                    })
+                    break;
+                }
+            }
+            dialog_extra_info.showModal();
+        })
+
+        $('#btn_close_dialog_extra_info').click(function(){
+            dialog_extra_info.close();
+        })
+
+        dialog_extra_info.addEventListener('click', (function(e) { // close dialog on click outside
+                let rect = e.target.getBoundingClientRect();
+                if (rect.left > e.clientX || rect.right < e.clientX || rect.top > e.clientY || rect.bottom < e.clientY) {
+                    dialog_extra_info.close();
+                }
+            })
+        );
+
+        $('#categories_count_all, #wave_count_all').trigger("click")
+
+    });
+
+    function SetStartView() { // mind the order!
+        IncludeNotesInRaceList();
+        ShowHideColumns();
+        $('#tool_bar').show();
+        $('#content').fadeIn(200);
+        SetListViewWidth();
+    }
+
+    function ShowHideColumns(){
+        // apply show hide of the columns to adjust correct placement of Edit & Delete button
+        // set visibility of toggle buttons and corresponding columns
+        if (ShowCat) {
+            $('#btn_onoff_cat').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_cat').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnCategory, .ColumnCategoryHeader").show();
+        } else {
+            $('#btn_onoff_cat').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_cat').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnCategory, .ColumnCategoryHeader").hide();
+        }
+
+        if (ShowBib) {
+            $('#btn_onoff_bib').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_bib').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnBib, .ColumnBibHeader, .ColumnBibForm").show();
+        } else {
+            $('#btn_onoff_bib').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_bib').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnBib, .ColumnBibHeader, .ColumnBibForm").hide();
+        }
+
+        if (ShowCustom) {
+            $('#btn_onoff_custom').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_custom').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnCustom, .ColumnCustomHeader, .ColumnCustomForm").show();
+        } else {
+            $('#btn_onoff_custom').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_custom').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnCustom, .ColumnCustomHeader, .ColumnCustomForm").hide();
+        }
+
+        if (ShowAge) {
+            $('#btn_onoff_age').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_age').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnAge, .ColumnAgeHeader, .ColumnAgeForm").show();
+        } else {
+            $('#btn_onoff_age').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_age').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnAge, .ColumnAgeHeader, .ColumnAgeForm").hide();
+        }
+
+        if (ShowGender) {
+            $('#btn_onoff_gender').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_gender').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnGender, .ColumnGenderHeader, .ColumnGenderForm").show();
+        } else {
+            $('#btn_onoff_gender').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_gender').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnGender, .ColumnGenderHeader, .ColumnGenderForm").hide();
+        }
+
+        if (ShowClub) {
+            $('#btn_onoff_club').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_club').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnClub, .ColumnClubHeader, .ColumnClubForm").show();
+        } else {
+            $('#btn_onoff_club').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_club').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnClub, .ColumnClubHeader, .ColumnClubForm").hide();
+        }
+
+        if (ShowHandicap) {
+            $('#btn_onoff_handicap').addClass("MenuItemLabelOn").removeClass("MenuItemLabelOff");
+            $('#img_onoff_handicap').attr('src', 'img/img_icon_checked.svg');
+            $(".ColumnHandicap, .ColumnHandicapHeader, .ColumnHandicapForm").show();
+        } else {
+            $('#btn_onoff_handicap').addClass("MenuItemLabelOff").removeClass("MenuItemLabelOn");
+            $('#img_onoff_handicap').attr('src', 'img/img_icon_unchecked.svg');
+            $(".ColumnHandicap, .ColumnHandicapHeader, .ColumnHandicapForm").hide();
+        }
+        SetListViewWidth();
+    }
+
+    function IncludeNotesInRaceList(){
+        count=0;
+        $(".ListNote").each(function(){
+            insertafter = $(this).attr('id').split("_").pop()
+
+            if (ViewStartListByCategory || HasWaves) {
+                if (insertafter == 0) {
+                    $("#racelist").children().first().before($(this))
+                } else {
+                    $("#racelist").children().eq(insertafter-1+count).after($(this))
+                }
+                count++;
+            } else {
+                if (insertafter == 0) {
+                    $(".RowToSort").first().before($(this)) // add to top of list
+                } else {
+                    $(".RowToSort").eq(insertafter-1).after($(this))
+                }
+                count++;
+            }
+        })
+    }
+
+    function SetListViewWidth() {
+        header_width=0
+        $(".FlRowHeader").find('.FlColumn:visible').each(function(){ // find visible columns in header
+            header_width += $(this).outerWidth(true)+8 // gap
+        })
+        $("#racelist, .DottedLineDark").outerWidth(header_width-8)
+    }
+
+
+</script>
+</body>
+</html>

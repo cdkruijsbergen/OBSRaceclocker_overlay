@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Boreas Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="dashboard-page">
+    <div class="dashboard-topbar">
+      <span class="dashboard-topbar-chevron">┬╗</span>
+      <span class="dashboard-title">RaceClocker Operator Dashboard</span>
+    </div>
+
+    <div class="dashboard-content">
+      <aside class="dashboard-sidebar">
+        <div class="dashboard-panel-title">Velden</div>
+        <div class="dashboard-field-list" id="fieldList"></div>
+      </aside>
+
+      <main class="dashboard-main">
+        <section class="dashboard-card">
+          <div class="dashboard-card-title">Bron type</div>
+          <div class="dashboard-mode-list" id="modeList"></div>
+        </section>
+
+        <section class="dashboard-card">
+          <div class="dashboard-card-title">Browser source</div>
+          <div class="dashboard-url-wrap">
+            <code class="dashboard-url" id="urlPreview">/overlay.html?veld=Mix2x</code>
+          </div>
+          <div class="dashboard-actions">
+            <button class="dashboard-btn" id="copyBtn">Kopieer URL</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <button class="dashboard-settings-button" id="settingsBtn">ÔÜÖ Instellingen</button>
+
+  <div class="dashboard-settings-panel" id="settingsPanel">
+    <div class="dashboard-settings-head">
+      <span class="dashboard-settings-title">Instellingen</span>
+      <button class="dashboard-settings-close" id="closeSettings">├ù</button>
+    </div>
+
+    <div class="dashboard-settings-body">
+      <div class="dashboard-setting-row">
+        <div class="dashboard-setting-copy">
+          <div class="dashboard-setting-label">E├®n URL voor alle velden</div>
+          <div class="dashboard-setting-help">Gebruik ├®├®n vaste browser source route</div>
+        </div>
+        <label class="dashboard-switch">
+          <input type="checkbox" id="globalUrlToggle">
+          <span class="dashboard-slider"></span>
+        </label>
+      </div>
+
+      <div class="dashboard-setting-row">
+        <div class="dashboard-setting-copy">
+          <div class="dashboard-setting-label">Balkkleur</div>
+          <div class="dashboard-setting-help">Kies de kleur van de dashboardbalk</div>
+        </div>
+        <input type="color" id="barColor" value="#005391">
+      </div>
+
+      <div class="dashboard-setting-row">
+        <div class="dashboard-setting-copy">
+          <div class="dashboard-setting-label">Auto refresh</div>
+          <div class="dashboard-setting-help">Ververs live resultaten automatisch</div>
+        </div>
+        <label class="dashboard-switch">
+          <input type="checkbox" id="autoRefreshToggle" checked>
+          <span class="dashboard-slider"></span>
+        </label>
+      </div>
+
+      <div class="dashboard-setting-row">
+        <div class="dashboard-setting-copy">
+          <div class="dashboard-setting-label">Ploegnamen inkorten</div>
+          <div class="dashboard-setting-help">Gebruik compacte namen in live output</div>
+        </div>
+        <label class="dashboard-switch">
+          <input type="checkbox" id="compactNamesToggle" checked>
+          <span class="dashboard-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-powered-by">
+    <span class="dashboard-powered-by-text">powered by</span>
+    <img src="STO.png" class="dashboard-sto-logo" alt="STO">
+  </div>
+
+  <script>
+    const dashboardPage = {
+      fields: [],
+      fieldMap: new Map(),
+      activeField: null,
+      activeMode: null
+    };
+
+    function modeLabel(mode) {
+      if (mode === 'timetrial') return 'Timetrial';
+      if (mode === 'finaleA') return 'A Finale';
+      if (mode === 'finaleB') return 'B Finale';
+      return mode;
+    }
+
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const closeSettings = document.getElementById('closeSettings');
+    const globalUrlToggle = document.getElementById('globalUrlToggle');
+    const autoRefreshToggle = document.getElementById('autoRefreshToggle');
+    const compactNamesToggle = document.getElementById('compactNamesToggle');
+    const barColor = document.getElementById('barColor');
+
+    settingsBtn.addEventListener('click', () => {
+      settingsPanel.classList.toggle('open');
+    });
+
+    closeSettings.addEventListener('click', () => {
+      settingsPanel.classList.remove('open');
+    });
+
+    globalUrlToggle.addEventListener('change', () => {
+      const preview = document.getElementById('urlPreview');
+      if (globalUrlToggle.checked) {
+        preview.textContent = '/overlay.html';
+      } else {
+        const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field);
+        const activeMode = dashboardPage.activeMode || (dashboardPage.fields[0] && dashboardPage.fields[0].modes && dashboardPage.fields[0].modes[0]);
+        const baseRoute = activeMode ? activeMode.route : '/overlay.html?veld=' + encodeURIComponent(activeField || '');
+        preview.textContent = baseRoute;
+      }
+    });
+
+    barColor.addEventListener('input', () => {
+      document.documentElement.style.setProperty('--dash-blue', barColor.value);
+      const page = document.querySelector('.dashboard-page');
+      if (page) page.style.borderColor = barColor.value;
+    });
+
+    async function loadDashboard() {
+      const res = await fetch('/api/dashboard');
+      const data = await res.json();
+      dashboardPage.fields = data.fields || [];
+
+      const fieldList = document.getElementById('fieldList');
+      const modeList = document.getElementById('modeList');
+      const urlPreview = document.getElementById('urlPreview');
+
+      fieldList.innerHTML = '';
+      dashboardPage.fields.forEach(field => {
+        const btn = document.createElement('button');
+        btn.className = 'field-button';
+        btn.textContent = field.field;
+        btn.addEventListener('click', () => {
+          dashboardPage.activeField = field.field;
+          renderModes(field);
+          document.querySelectorAll('.field-button').forEach(b => b.classList.toggle('selected', b === btn));
+        });
+        fieldList.appendChild(btn);
+      });
+
+      if (dashboardPage.fields.length > 0) {
+        dashboardPage.activeField = dashboardPage.fields[0].field;
+        renderModes(dashboardPage.fields[0]);
+        const firstFieldButton = fieldList.querySelector('button');
+        if (firstFieldButton) firstFieldButton.classList.add('selected');
+      }
+
+      function renderModes(field) {
+        const list = field.modes || [];
+        modeList.innerHTML = '';
+        list.forEach(mode => {
+          const modeBtn = document.createElement('button');
+          modeBtn.className = 'mode-button';
+          modeBtn.textContent = mode.label;
+          modeBtn.addEventListener('click', () => {
+            dashboardPage.activeMode = mode;
+            const route = globalUrlToggle.checked
+              ? '/overlay.html'
+              : (mode.route || '/overlay.html?veld=' + encodeURIComponent(mode.cat));
+            urlPreview.textContent = route;
+            document.querySelectorAll('.mode-button').forEach(b => b.classList.toggle('selected', b === modeBtn));
+          });
+          modeList.appendChild(modeBtn);
+        });
+
+        if (list.length > 0) {
+          const first = list[0];
+          dashboardPage.activeMode = first;
+          const route = globalUrlToggle.checked
+            ? '/overlay.html'
+            : (first.route || '/overlay.html?veld=' + encodeURIComponent(first.cat));
+          urlPreview.textContent = route;
+          const firstButton = modeList.querySelector('button');
+          if (firstButton) firstButton.classList.add('selected');
+        }
+      }
+    }
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const url = document.getElementById('urlPreview').textContent;
+      try {
+        await navigator.clipboard.writeText(location.origin + url);
+      } catch (e) {
+        await navigator.clipboard.writeText(url);
+      }
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>
