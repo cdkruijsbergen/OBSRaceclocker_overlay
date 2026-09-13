@@ -1,0 +1,148 @@
+/* Live RaceClocker timetrial widget */
+:root {
+  --live-bg: rgba(0, 0, 0, 0.62);
+  --live-panel: #001f4c;
+  --live-blue: #005391;
+  --live-deep: #001126;
+  --live-line: #eaf7ff;
+  --live-text: #eef8ff;
+  --live-soft: #b7d9f7;
+  --live-font: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--live-text);
+  font-family: var(--live-font);
+}
+
+.live-page {
+  width: min(420px, 100vw);
+  min-height: 180px;
+  background: var(--live-bg);
+  border: 1px solid var(--live-line);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 31, 76, 0.7);
+  overflow: hidden;
+}
+
+.live-topbar {
+  min-height: 34px;
+  position: relative;
+  background: linear-gradient(115deg, var(--live-deep), var(--live-blue), var(--live-deep));
+  background-size: 180% 100%;
+  border-bottom: 1px solid var(--live-line);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  overflow: hidden;
+  animation: liveBlueFlow 3.5s ease-in-out infinite;
+}
+
+.live-topbar::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  transform: translateX(-90%) skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(234, 247, 255, 0.38), transparent);
+  filter: blur(7px);
+  animation: liveShimmer 2.8s ease-in-out infinite;
+}
+
+.live-topbar-chevron {
+  font-family: var(--live-font);
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--live-line);
+  margin-right: 7px;
+}
+
+.live-topbar-field {
+  font-family: var(--live-font);
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--live-text);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.live-content {
+  padding: 8px 12px 10px;
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.live-timetrial-title {
+  font-family: var(--live-font);
+  font-size: calc(14px * 1.1);
+  font-weight: 800;
+  color: var(--live-line);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.live-timetrial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.live-timetrial-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 72px;
+  gap: 2px;
+  align-items: center;
+  border-bottom: 1px solid rgba(234, 247, 255, 0.16);
+  padding: 1px 0;
+  min-height: 18px;
+}
+
+.live-tt-name {
+  font-family: var(--live-font);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--live-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-tt-club {
+  font-family: var(--live-font);
+  font-size: 12px;
+  color: var(--live-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-tt-time {
+  font-family: var(--live-font);
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--live-white, var(--live-text));
+  text-align: right;
+}
+
+@keyframes liveBlueFlow {
+  50% {
+    background-position: 100% 0%;
+    filter: brightness(1.12);
+  }
+}
+
+@keyframes liveShimmer {
+  50% {
+    transform: translateX(125%) skewX(-18deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(150%) skewX(-18deg);
+    opacity: 0;
+  }
+}

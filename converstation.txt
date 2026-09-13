@@ -1,0 +1,10 @@
+Raceclocker → OBS overlay voor Strijkbokaal (Z.S.R. Boreas)
+
+Samenvatting:
+- Doel: automatische overlay in OBS met tijden uit Raceclocker
+- Finale: snelste tijd bovenaan, tweede tijd daaronder
+- Timetrial: lijst met ploeg, tijd, veld
+- Stijl: blauw-wit-blauw, Boreas-wapen, TeX Gyre Advent Bold
+- Tijdnotatie: mm:ss.honderdsten
+- Server: Node.js + Express, HTML-scraping van https://www.raceclocker.com/0790c73f
+- Overlay: Browser Source in OBS, per scene veld via ?veld=HC4+, Mix2x, H2x, HC2+, O1x, etc.

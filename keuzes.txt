@@ -1,0 +1,16 @@
+http://localhost:5000/overlay.html?veld=Mix2x
+http://localhost:5000/live.html?veld=Mix2x
+
+Beschikbare browsersource-varianten:
+1. Eindscherm: http://localhost:5000/overlay.html?veld=Mix2x
+2. Live timetrial: http://localhost:5000/live.html?veld=Mix2x
+
+Extra velden kunnen worden gekozen door de querystring ?veld=... te wijzigen, bijvoorbeeld:
+http://localhost:5000/overlay.html?veld=HC4+
+http://localhost:5000/live.html?veld=HC4+
+http://localhost:5000/overlay.html?veld=H2x
+http://localhost:5000/live.html?veld=H2x
+http://localhost:5000/overlay.html?veld=HC2+
+http://localhost:5000/live.html?veld=HC2+
+http://localhost:5000/overlay.html?veld=O1x
+http://localhost:5000/live.html?veld=O1x

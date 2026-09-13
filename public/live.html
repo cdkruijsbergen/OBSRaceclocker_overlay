@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Boreas Race Timetrial Live</title>
+  <link rel="stylesheet" href="live.css">
+</head>
+<body>
+  <div class="live-page">
+    <div class="live-topbar">
+      <span class="live-topbar-chevron">»</span>
+      <span class="live-topbar-field" id="veldLabel">Mix2x</span>
+    </div>
+
+    <div class="live-content">
+      <div class="live-timetrial-title">Timetrial resultaten</div>
+      <div class="live-timetrial-list" id="timetrialList"></div>
+    </div>
+  </div>
+
+  <script>
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+
+    function shortenDisplayName(name) {
+      const value = String(name || "").trim();
+      if (value === "Strijkend tegen stromend water") {
+        return "Strijkend tegen strom...";
+      }
+      if (value.length > 23) {
+        return `${value.slice(0, 19).trim()}...`;
+      }
+      return value;
+    }
+
+    async function loadTimetrial(veld) {
+      const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}&compact=1`);
+      const list = await res.json();
+      const container = document.getElementById("timetrialList");
+      const veldLabel = document.getElementById("veldLabel");
+
+      veldLabel.textContent = veld || "Alle velden";
+      container.innerHTML = "";
+
+      list.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "live-timetrial-row";
+        row.innerHTML = `
+          <div class="live-tt-name">${shortenDisplayName(item.name)}</div>
+          <div class="live-tt-club">${item.club}</div>
+          <div class="live-tt-time">${item.displayTime}</div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function refresh() {
+      const veld = getParam("veld");
+      await loadTimetrial(veld);
+    }
+
+    refresh();
+    setInterval(refresh, 1500);
+  </script>
+</body>
+</html>

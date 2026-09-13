@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Boreas Race Overlay</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="overlay">
+    <div class="overlay-topbar">
+      <div class="topbar-strip">
+        <span class="topbar-chevron">»</span>
+        <span class="topbar-field" id="veldLabel">Mix2x</span>
+      </div>
+    </div>
+
+    <div class="overlay-content">
+      <div class="overlay-header">
+        <img src="Boreas.png" class="logo" alt="Boreas">
+        <div class="title">
+          <div class="title-main">Strijkbokaal Finale</div>
+          <div class="title-sub">Boreas Race Results</div>
+        </div>
+      </div>
+
+      <div class="finale-block">
+        <div class="finale-row" id="fastestRow">
+          <div class="finale-label">Snelste tijd</div>
+          <div class="finale-name" id="fastestName"></div>
+          <div class="finale-club" id="fastestClub"></div>
+          <div class="finale-time" id="fastestTime"></div>
+        </div>
+        <div class="finale-row" id="secondRow">
+          <div class="finale-label">Tweede tijd</div>
+          <div class="finale-name" id="secondName"></div>
+          <div class="finale-club" id="secondClub"></div>
+          <div class="finale-time" id="secondTime"></div>
+        </div>
+      </div>
+
+      <div class="timetrial-block">
+        <div class="timetrial-title">Timetrial resultaten</div>
+        <div class="timetrial-list" id="timetrialList"></div>
+      </div>
+    </div>
+
+    <div class="overlay-bottombar"></div>
+
+    <script>
+      function getParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name);
+      }
+
+      async function loadFinale(veld) {
+        const res = await fetch(`/api/finale?veld=${encodeURIComponent(veld || "")}`);
+        const data = await res.json();
+
+        document.getElementById("veldLabel").textContent = veld || "Alle velden";
+
+        if (data.fastest) {
+          document.getElementById("fastestName").textContent = data.fastest.name;
+          document.getElementById("fastestClub").textContent = data.fastest.club;
+          document.getElementById("fastestTime").textContent = data.fastest.displayTime;
+        } else {
+          document.getElementById("fastestName").textContent = "—";
+          document.getElementById("fastestClub").textContent = "";
+          document.getElementById("fastestTime").textContent = "";
+        }
+
+        if (data.second) {
+          document.getElementById("secondName").textContent = data.second.name;
+          document.getElementById("secondClub").textContent = data.second.club;
+          document.getElementById("secondTime").textContent = data.second.displayTime;
+        } else {
+          document.getElementById("secondName").textContent = "—";
+          document.getElementById("secondClub").textContent = "";
+          document.getElementById("secondTime").textContent = "";
+        }
+      }
+
+      async function loadTimetrial(veld) {
+        const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}`);
+        const list = await res.json();
+        const container = document.getElementById("timetrialList");
+        container.innerHTML = "";
+
+        list.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "timetrial-row";
+          row.innerHTML = `
+            <div class="tt-name">${item.name}</div>
+            <div class="tt-club">${item.club}</div>
+            <div class="tt-cat">${item.cat}</div>
+            <div class="tt-time">${item.displayTime}</div>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      async function refresh() {
+        const veld = getParam("veld");
+        await loadFinale(veld);
+        await loadTimetrial(veld);
+      }
+
+      refresh();
+      setInterval(refresh, 2000); // elke 2s verversen
+    </script>
+  </div>
+</body>
+</html>
