@@ -1,6 +1,7 @@
 import express from "express";
 import { load } from "cheerio";
 import { readFile } from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 
 const app = express();
 const PORT = 5000;
@@ -17,6 +18,7 @@ const overlayState = {
   route: "/overlay.html?veld=Mix2x",
   liveRoute: "/live.html?veld=Mix2x",
   startlistRoute: "/startlist.html?veld=Mix2x",
+  activeField: "Mix2x",
   mode: "timetrial",
   autoRefresh: true,
   compactNames: true,
@@ -42,6 +44,9 @@ app.post("/api/overlay-state", (req, res) => {
     if (typeof body.startlistRoute === "string" && body.startlistRoute) {
       overlayState.startlistRoute = body.startlistRoute;
     }
+    if (typeof body.activeField === "string" && body.activeField) {
+      overlayState.activeField = body.activeField;
+    }
     if (typeof body.mode === "string" && body.mode) {
       overlayState.mode = body.mode;
     }
@@ -60,6 +65,40 @@ app.post("/api/overlay-state", (req, res) => {
     res.status(500).json({ error: "Failed to store overlay state" });
   }
 });
+
+export function routeFieldFromRoute(route) {
+  try {
+    if (!route || !route.includes('?')) return '';
+    const params = new URLSearchParams(route.split('?')[1] || '');
+    return params.get('veld') || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+export function resolveFieldForPage(pageUrl, route, activeField) {
+  try {
+    const url = new URL(pageUrl, 'http://localhost:5000');
+    const pageVeld = url.searchParams.get('veld');
+    if (pageVeld) return pageVeld;
+  } catch (e) {
+    // ignore malformed page URL and fall back to persisted route/state
+  }
+
+  const routeField = routeFieldFromRoute(route);
+  if (routeField) return routeField;
+
+  return activeField || '';
+}
+
+function normalizeFieldName(field) {
+  return String(field || '').trim().toLowerCase();
+}
+
+function categoryMatchesField(cat, veld) {
+  if (!veld) return true;
+  return normalizeFieldName(toBaseField(cat)) === normalizeFieldName(toBaseField(veld));
+}
 
 function parseTimeToMs(str) {
   if (!str || str === "Not started" || String(str).includes("Missing")) {
@@ -88,6 +127,10 @@ function parseTimeToMs(str) {
 }
 
 function formatMsToTime(ms) {
+  if (ms === null || ms === undefined || Number.isNaN(ms)) {
+    return "--:--,--";
+  }
+
   const totalSec = Math.max(0, ms / 1000);
   const m = Math.floor(totalSec / 60);
   const s = totalSec - m * 60;
@@ -264,7 +307,6 @@ async function fetchResults() {
     .map(row => {
       const result = row.Result || "";
       const ms = parseTimeToMs(result);
-      if (ms === null) return null;
 
       return {
         name: row.Name || "",
@@ -276,8 +318,7 @@ async function fetchResults() {
         penalty: row.Penalty || "",
         ms
       };
-    })
-    .filter(Boolean);
+    });
 
   console.log('mapped_len', mapped.length);
   return mapped;
@@ -309,6 +350,31 @@ function familyFromCategory(cat) {
   };
 }
 
+function normalizedSortOrder(label) {
+  const order = {
+    "Timetrial": 0,
+    "Startlijst": 1,
+    "A Finale": 2,
+    "B Finale": 3,
+    "C Finale": 4,
+    "D Finale": 5,
+    "E Finale": 6,
+    "F Finale": 7,
+    "G Finale": 8,
+    "H Finale": 9,
+    "I Finale": 10,
+    "J Finale": 11,
+    "K Finale": 12,
+    "L Finale": 13,
+    "M Finale": 14,
+    "N Finale": 15,
+    "O Finale": 16,
+    "P Finale": 17,
+    "Q Finale": 18,
+  };
+  return order[label] ?? 100;
+}
+
 app.get("/api/dashboard", async (req, res) => {
   try {
     const categories = await fetchCategories();
@@ -326,11 +392,16 @@ app.get("/api/dashboard", async (req, res) => {
         fieldMap.set(field, { field, modes: [] });
       }
 
+      const baseField = toBaseField(normalized);
       const mode = {
         label,
         cat: normalized,
-        route: `/overlay.html?veld=${encodeURIComponent(toBaseField(normalized))}`
+        route: `/overlay.html?veld=${encodeURIComponent(baseField)}`
       };
+
+      if (label === 'Timetrial') {
+        mode.cat = baseField;
+      }
 
       const existing = fieldMap.get(field).modes.find(m => m.cat === normalized && m.label === label);
       if (!existing) {
@@ -351,10 +422,7 @@ app.get("/api/dashboard", async (req, res) => {
 
     const orderedFields = Array.from(fieldMap.values()).map(item => ({
       field: item.field,
-      modes: item.modes.sort((a, b) => {
-        const order = { "Timetrial": 0, "Startlijst": 1, "A Finale": 2, "B Finale": 3, "C Finale": 4, "D Finale": 5, "E Finale": 6, "F Finale": 7, "G Finale": 8, "H Finale": 9, "I Finale": 10, "J Finale": 11, "K Finale": 12, "L Finale": 13, "M Finale": 14, "N Finale": 15, "O Finale": 16, "P Finale": 17, "Q Finale": 18 };
-        return order[a.label] - order[b.label];
-      })
+      modes: item.modes.sort((a, b) => normalizedSortOrder(a.label) - normalizedSortOrder(b.label))
     }));
 
     res.json({ fields: orderedFields });
@@ -366,11 +434,12 @@ app.get("/api/dashboard", async (req, res) => {
 
 app.get("/api/finale", async (req, res) => {
   try {
-    const veld = req.query.veld;
+    const veld = req.query.veld ? String(req.query.veld) : '';
     const data = await fetchResults();
-    const filtered = veld ? data.filter(r => r.cat === veld) : data;
+    const filtered = veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data;
 
-    const sorted = filtered.sort((a, b) => a.ms - b.ms);
+    const timeRows = filtered.filter(r => r.ms !== null);
+    const sorted = timeRows.sort((a, b) => a.ms - b.ms);
     const fastest = sorted[0] || null;
     const second = sorted[1] || null;
 
@@ -399,7 +468,7 @@ function extractStartlistRows(html, veld) {
       || $(row).find(".Name").first().text().trim();
 
     if (!cat || !name) return;
-    if (veld && toBaseField(cat) !== veld) return;
+    if (veld && !categoryMatchesField(cat, veld)) return;
 
     rows.push({ name, club, cat });
   });
@@ -444,24 +513,75 @@ app.get("/api/startlist", async (req, res) => {
 
 app.get("/api/timetrial", async (req, res) => {
   try {
-    const veld = req.query.veld;
+    const veld = req.query.veld ? String(req.query.veld) : '';
     const compact = req.query.compact === "1" || req.query.compact === "true";
     const data = await fetchResults();
-    const filtered = veld ? data.filter(r => r.cat === veld) : data;
-    const sorted = filtered.sort((a, b) => a.ms - b.ms);
+    const filtered = veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data;
+    const sorted = filtered
+      .filter(r => r.ms !== null)
+      .sort((a, b) => a.ms - b.ms);
+
     const list = sorted.map(r => ({
       name: compact ? shortenDisplayName(r.name, 24) : r.name,
       cat: r.cat,
       club: r.club,
       displayTime: formatMsToTime(r.ms)
     }));
-    res.json(list);
+
+    const missingRows = filtered
+      .filter(r => r.ms === null)
+      .map(r => ({
+        name: compact ? shortenDisplayName(r.name, 24) : r.name,
+        cat: r.cat,
+        club: r.club,
+        displayTime: formatMsToTime(null)
+      }));
+
+    res.json([...list, ...missingRows]);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to fetch timetrial data" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.get("/api/live", async (req, res) => {
+  try {
+    const veld = req.query.veld ? String(req.query.veld) : '';
+    const data = await fetchResults();
+    const filtered = veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data;
+    const timed = filtered.filter(r => r.ms !== null);
+    const fastest = [...timed].sort((a, b) => a.ms - b.ms)[0] || null;
+    const latest = timed[timed.length - 1] || null;
+
+    if (!fastest || !latest) {
+      res.json({ fastest: null, latest: null, diff: null, diffDisplay: null });
+      return;
+    }
+
+    const diff = latest.ms - fastest.ms;
+    res.json({
+      fastest: {
+        ...fastest,
+        displayTime: formatMsToTime(fastest.ms)
+      },
+      latest: {
+        ...latest,
+        displayTime: formatMsToTime(latest.ms)
+      },
+      diff,
+      diffDisplay: diff === 0 ? '±0.00' : `${diff < 0 ? '-' : '+'}${formatMsToTime(Math.abs(diff))}`
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to fetch live view data" });
+  }
 });
+
+const isDirectlyRun = process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url;
+if (isDirectlyRun) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

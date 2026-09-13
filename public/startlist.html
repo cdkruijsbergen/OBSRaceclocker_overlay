@@ -54,7 +54,8 @@
       const stateRes = await fetch('/api/overlay-state');
       const state = await stateRes.json();
       const route = state.globalUrlToggle ? '/startlist.html' : (state.startlistRoute || '/startlist.html');
-      const veld = routeField(route);
+      const urlVeld = getParam('veld') || '';
+      const veld = urlVeld || routeField(route) || state.activeField || '';
       await loadStartlist(veld);
     }
 

@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
+process.env.NODE_ENV = 'test';
+const { resolveFieldForPage, routeFieldFromRoute } = await import('./server.js');
+
 function normalizeBrowserSourceCat(cat) {
   return String(cat).replace(/F[A-Q]$/i, '');
 }
@@ -38,14 +41,13 @@ test('dashboard family labels extend through FA..FQ', () => {
 });
 
 test('dashboard route parser can read the active field from a browser source route', () => {
-  function parseFieldFromRoute(route) {
-    if (!route || !route.includes('?')) return null;
-    const search = route.split('?')[1] || '';
-    const params = new URLSearchParams(search);
-    return params.get('veld');
-  }
+  assert.equal(routeFieldFromRoute('/overlay.html?veld=h2x'), 'h2x');
+  assert.equal(routeFieldFromRoute('/startlist.html?veld=Mix2x'), 'Mix2x');
+  assert.equal(routeFieldFromRoute('/overlay.html'), '');
+});
 
-  assert.equal(parseFieldFromRoute('/overlay.html?veld=h2x'), 'h2x');
-  assert.equal(parseFieldFromRoute('/startlist.html?veld=Mix2x'), 'Mix2x');
-  assert.equal(parseFieldFromRoute('/overlay.html'), null);
+test('field resolution prefers the page URL query string and falls back to route state or active field state', () => {
+  assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html?veld=H2x', '/overlay.html?veld=Mix2x', 'Mix2x'), 'H2x');
+  assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html', '/overlay.html?veld=Mix2x', 'H2x'), 'Mix2x');
+  assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html', '/overlay.html', 'H2x'), 'H2x');
 });

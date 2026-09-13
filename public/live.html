@@ -13,8 +13,24 @@
     </div>
 
     <div class="live-content">
-      <div class="live-timetrial-title">Timetrial resultaten</div>
-      <div class="live-timetrial-list" id="timetrialList"></div>
+      <div class="live-timetrial-title">Live resultaat</div>
+
+      <div class="live-summary">
+        <div class="live-summary-row">
+          <div class="live-summary-label">Snelste tijd</div>
+          <div class="live-summary-name" id="fastestName">—</div>
+          <div class="live-summary-club" id="fastestClub"></div>
+          <div class="live-summary-time" id="fastestTime">--:--,--</div>
+        </div>
+
+        <div class="live-summary-row latest-row">
+          <div class="live-summary-label">Recentste tijd</div>
+          <div class="live-summary-name" id="latestName">—</div>
+          <div class="live-summary-club" id="latestClub"></div>
+          <div class="live-summary-time" id="latestTime">--:--,--</div>
+          <div class="live-summary-diff" id="latestDiff">±0.00</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -34,45 +50,52 @@
       }
     }
 
-    function shortenDisplayName(name) {
-      const value = String(name || "").trim();
-      if (value === "Strijkend tegen stromend water") {
-        return "Strijkend tegen strom...";
-      }
-      if (value.length > 23) {
-        return `${value.slice(0, 19).trim()}...`;
-      }
-      return value;
+    function formatSignedDiff(diff) {
+      if (diff === null || diff === undefined) return '±0.00';
+      const sign = diff < 0 ? '-' : '+';
+      return `${sign}${String(Math.abs(diff / 1000)).padStart(4, '0')}`;
     }
 
-    async function loadTimetrial(veld, compactNames) {
+    async function loadLive(veld, compactNames) {
       const compact = compactNames ? 1 : 0;
-      const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}&compact=${compact}`);
-      const list = await res.json();
-      const container = document.getElementById("timetrialList");
-      const veldLabel = document.getElementById("veldLabel");
+      const res = await fetch(`/api/live?veld=${encodeURIComponent(veld || "")}&compact=${compact}`);
+      const data = await res.json();
+      const veldLabel = document.getElementById('veldLabel');
+      veldLabel.textContent = veld || 'Alle velden';
 
-      veldLabel.textContent = veld || "Alle velden";
-      container.innerHTML = "";
+      if (data.fastest) {
+        document.getElementById('fastestName').textContent = data.fastest.name;
+        document.getElementById('fastestClub').textContent = data.fastest.club;
+        document.getElementById('fastestTime').textContent = data.fastest.displayTime;
+      } else {
+        document.getElementById('fastestName').textContent = '—';
+        document.getElementById('fastestClub').textContent = '';
+        document.getElementById('fastestTime').textContent = '--:--,--';
+      }
 
-      list.forEach(item => {
-        const row = document.createElement("div");
-        row.className = "live-timetrial-row";
-        row.innerHTML = `
-          <div class="live-tt-name">${compactNames ? shortenDisplayName(item.name) : item.name}</div>
-          <div class="live-tt-club">${item.club}</div>
-          <div class="live-tt-time">${item.displayTime}</div>
-        `;
-        container.appendChild(row);
-      });
+      if (data.latest) {
+        document.getElementById('latestName').textContent = data.latest.name;
+        document.getElementById('latestClub').textContent = data.latest.club;
+        document.getElementById('latestTime').textContent = data.latest.displayTime;
+        const diff = Number(data.diff || 0);
+        const diffNode = document.getElementById('latestDiff');
+        diffNode.textContent = diff < 0 ? `-${Math.abs(diff / 1000).toFixed(2)}` : `+${Math.abs(diff / 1000).toFixed(2)}`;
+        diffNode.style.color = diff < 0 ? '#7dff9a' : '#ff9494';
+      } else {
+        document.getElementById('latestName').textContent = '—';
+        document.getElementById('latestClub').textContent = '';
+        document.getElementById('latestTime').textContent = '--:--,--';
+        document.getElementById('latestDiff').textContent = '±0.00';
+      }
     }
 
     async function refresh() {
       const stateRes = await fetch('/api/overlay-state');
       const state = await stateRes.json();
       const route = state.globalUrlToggle ? '/live.html' : (state.liveRoute || '/live.html');
-      const veld = routeField(route);
-      await loadTimetrial(veld, state.compactNames !== false);
+      const urlVeld = getParam('veld') || '';
+      const veld = urlVeld || routeField(route) || state.activeField || '';
+      await loadLive(veld, state.compactNames !== false);
     }
 
     refresh();

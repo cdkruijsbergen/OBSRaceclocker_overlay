@@ -178,11 +178,13 @@
       const preview = document.getElementById('urlPreview');
       if (globalUrlToggle.checked) {
         preview.textContent = '/overlay.html';
+        const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field) || '';
         sendOverlayState({
           globalUrlToggle: true,
           route: '/overlay.html',
           liveRoute: '/live.html',
-          startlistRoute: '/startlist.html'
+          startlistRoute: '/startlist.html',
+          activeField
         });
       } else {
         const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field) || '';
@@ -194,7 +196,8 @@
           globalUrlToggle: false,
           route,
           liveRoute,
-          startlistRoute
+          startlistRoute,
+          activeField
         });
       }
     });
@@ -240,6 +243,7 @@
             route: routePatch.route,
             liveRoute: routePatch.liveRoute,
             startlistRoute: routePatch.startlistRoute,
+            activeField: field.field,
             mode: routePatch.mode
           });
         });
@@ -272,6 +276,7 @@
               route: routePatch.route,
               liveRoute: routePatch.liveRoute,
               startlistRoute: routePatch.startlistRoute,
+              activeField,
               mode: routePatch.mode
             });
           });

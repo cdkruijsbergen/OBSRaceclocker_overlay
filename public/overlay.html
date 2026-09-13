@@ -109,12 +109,45 @@
         });
       }
 
+      async function loadStartlist(veld) {
+        const res = await fetch(`/api/startlist?veld=${encodeURIComponent(veld || "")}`);
+        const rows = await res.json();
+        const container = document.getElementById("timetrialList");
+        container.innerHTML = '';
+
+        rows.forEach(row => {
+          const item = document.createElement("div");
+          item.className = 'timetrial-row';
+          item.innerHTML = `
+            <div class="tt-name">${row.name || ''}</div>
+            <div class="tt-club">${row.club || ''}</div>
+            <div class="tt-cat">${row.cat || ''}</div>
+            <div class="tt-time">--:--,--</div>
+          `;
+          container.appendChild(item);
+        });
+      }
+
       async function refresh() {
         const stateRes = await fetch('/api/overlay-state');
         const state = await stateRes.json();
         const route = state.globalUrlToggle ? '/overlay.html' : (state.route || '/overlay.html');
-        const veld = routeField(route);
-        await loadFinale(veld);
+        const urlVeld = getParam('veld') || '';
+        const veld = urlVeld || routeField(route) || state.activeField || '';
+        const mode = String(state.mode || 'Timetrial');
+
+        document.getElementById('veldLabel').textContent = veld || 'Alle velden';
+
+        if (/Startlijst/i.test(mode)) {
+          await loadStartlist(veld);
+          return;
+        }
+
+        if (/Finale/i.test(mode)) {
+          await loadFinale(veld);
+          return;
+        }
+
         await loadTimetrial(veld, state.compactNames !== false);
       }
 
