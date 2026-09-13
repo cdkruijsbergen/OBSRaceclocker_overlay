@@ -10,6 +10,40 @@ const LOCAL_HTML = "raceclocker-page.html";
 const LOCAL_STARTLIST_HTML = "raceclocker-startlist.html";
 
 app.use(express.static("public"));
+app.use(express.json());
+
+const overlayState = {
+  globalUrlToggle: false,
+  route: "/overlay.html",
+  liveRoute: "/live.html",
+  startlistRoute: "/startlist.html"
+};
+
+app.get("/api/overlay-state", (req, res) => {
+  res.json(overlayState);
+});
+
+app.post("/api/overlay-state", (req, res) => {
+  try {
+    const body = req.body || {};
+    if (typeof body.globalUrlToggle === "boolean") {
+      overlayState.globalUrlToggle = body.globalUrlToggle;
+    }
+    if (typeof body.route === "string" && body.route) {
+      overlayState.route = body.route;
+    }
+    if (typeof body.liveRoute === "string" && body.liveRoute) {
+      overlayState.liveRoute = body.liveRoute;
+    }
+    if (typeof body.startlistRoute === "string" && body.startlistRoute) {
+      overlayState.startlistRoute = body.startlistRoute;
+    }
+    res.json(overlayState);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to store overlay state" });
+  }
+});
 
 function parseTimeToMs(str) {
   if (!str || str === "Not started" || String(str).includes("Missing")) {
@@ -278,10 +312,21 @@ app.get("/api/dashboard", async (req, res) => {
       }
     }
 
+    Array.from(fieldMap.values()).forEach(item => {
+      const startlistExists = item.modes.some(mode => mode.label === 'Startlijst');
+      if (!startlistExists) {
+        item.modes.push({
+          label: 'Startlijst',
+          cat: item.field,
+          route: `/startlist.html?veld=${encodeURIComponent(item.field)}`
+        });
+      }
+    });
+
     const orderedFields = Array.from(fieldMap.values()).map(item => ({
       field: item.field,
       modes: item.modes.sort((a, b) => {
-        const order = { "Timetrial": 0, "A Finale": 1, "B Finale": 2, "C Finale": 3, "D Finale": 4, "E Finale": 5, "F Finale": 6, "G Finale": 7, "H Finale": 8, "I Finale": 9, "J Finale": 10, "K Finale": 11, "L Finale": 12, "M Finale": 13, "N Finale": 14, "O Finale": 15, "P Finale": 16, "Q Finale": 17 };
+        const order = { "Timetrial": 0, "Startlijst": 1, "A Finale": 2, "B Finale": 3, "C Finale": 4, "D Finale": 5, "E Finale": 6, "F Finale": 7, "G Finale": 8, "H Finale": 9, "I Finale": 10, "J Finale": 11, "K Finale": 12, "L Finale": 13, "M Finale": 14, "N Finale": 15, "O Finale": 16, "P Finale": 17, "Q Finale": 18 };
         return order[a.label] - order[b.label];
       })
     }));
@@ -314,6 +359,60 @@ app.get("/api/finale", async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to fetch finale data" });
+  }
+});
+
+function extractStartlistRows(html, veld) {
+  const $ = load(html);
+  const rows = [];
+
+  $(".RowToSort").each((_, row) => {
+    const cat = $(row).find(".LineCategory").first().text().trim();
+    const club = $(row).find(".LineClub").first().text().trim();
+    const name = $(row).find(".Name .Type_black_10").first().text().trim()
+      || $(row).find(".Name").first().text().trim();
+
+    if (!cat || !name) return;
+    if (veld && toBaseField(cat) !== veld) return;
+
+    rows.push({ name, club, cat });
+  });
+
+  return rows;
+}
+
+async function fetchStartlist(veld) {
+  let html = '';
+  try {
+    html = await readFile(LOCAL_STARTLIST_HTML, 'utf8');
+  } catch (e) {
+    const res = await fetch(RACE_STARTLIST_URL, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "nl-NL,nl;q=0.9"
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Raceclocker startlist fetch failed: ${res.status} ${res.statusText}`);
+    }
+
+    html = await res.text();
+  }
+
+  const rows = extractStartlistRows(html, veld);
+  return rows;
+}
+
+app.get("/api/startlist", async (req, res) => {
+  try {
+    const veld = req.query.veld ? String(req.query.veld) : '';
+    const rows = await fetchStartlist(veld);
+    res.json(rows);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to fetch startlist data" });
   }
 });
 

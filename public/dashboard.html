@@ -95,6 +95,32 @@
   </div>
 
   <script>
+    async function sendOverlayState(patch) {
+      try {
+        await fetch('/api/overlay-state', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(patch)
+        });
+      } catch (e) {
+        console.error('overlay-state sync failed', e);
+      }
+    }
+
+    async function loadOverlayState() {
+      try {
+        const res = await fetch('/api/overlay-state');
+        const state = await res.json();
+        if (state.globalUrlToggle === true) {
+          globalUrlToggle.checked = true;
+          const preview = document.getElementById('urlPreview');
+          preview.textContent = '/overlay.html';
+        }
+      } catch (e) {
+        console.error('overlay-state load failed', e);
+      }
+    }
+
     const dashboardPage = {
       fields: [],
       fieldMap: new Map(),
@@ -129,11 +155,23 @@
       const preview = document.getElementById('urlPreview');
       if (globalUrlToggle.checked) {
         preview.textContent = '/overlay.html';
+        sendOverlayState({
+          globalUrlToggle: true,
+          route: '/overlay.html',
+          liveRoute: '/live.html',
+          startlistRoute: '/startlist.html'
+        });
       } else {
         const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field);
         const activeMode = dashboardPage.activeMode || (dashboardPage.fields[0] && dashboardPage.fields[0].modes && dashboardPage.fields[0].modes[0]);
         const baseRoute = activeMode ? activeMode.route : '/overlay.html?veld=' + encodeURIComponent(activeField || '');
         preview.textContent = baseRoute;
+        sendOverlayState({
+          globalUrlToggle: false,
+          route: baseRoute,
+          liveRoute: '/live.html?veld=' + encodeURIComponent(activeField || ''),
+          startlistRoute: '/startlist.html?veld=' + encodeURIComponent(activeField || '')
+        });
       }
     });
 
@@ -161,6 +199,11 @@
           dashboardPage.activeField = field.field;
           renderModes(field);
           document.querySelectorAll('.field-button').forEach(b => b.classList.toggle('selected', b === btn));
+          sendOverlayState({
+            route: '/overlay.html?veld=' + encodeURIComponent(field.field),
+            liveRoute: '/live.html?veld=' + encodeURIComponent(field.field),
+            startlistRoute: '/startlist.html?veld=' + encodeURIComponent(field.field)
+          });
         });
         fieldList.appendChild(btn);
       });
@@ -186,6 +229,11 @@
               : (mode.route || '/overlay.html?veld=' + encodeURIComponent(mode.cat));
             urlPreview.textContent = route;
             document.querySelectorAll('.mode-button').forEach(b => b.classList.toggle('selected', b === modeBtn));
+            sendOverlayState({
+              route,
+              liveRoute: '/live.html?veld=' + encodeURIComponent(mode.cat),
+              startlistRoute: '/startlist.html?veld=' + encodeURIComponent(mode.cat)
+            });
           });
           modeList.appendChild(modeBtn);
         });
@@ -213,6 +261,7 @@
     });
 
     loadDashboard();
+    loadOverlayState();
   </script>
 </body>
 </html>

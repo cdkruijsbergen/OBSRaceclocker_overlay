@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Boreas Startlijst</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="startlist-page">
+    <div class="startlist-topbar">
+      <span class="startlist-topbar-chevron">»</span>
+      <span class="startlist-topbar-field" id="veldLabel">Startlijst</span>
+    </div>
+
+    <div class="startlist-content">
+      <div class="startlist-title">Startlijst</div>
+      <div class="startlist-list" id="startlistList"></div>
+    </div>
+  </div>
+
+  <script>
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+
+    async function loadStartlist(veld) {
+      const res = await fetch(`/api/startlist?veld=${encodeURIComponent(veld || '')}`);
+      const rows = await res.json();
+      const list = document.getElementById('startlistList');
+      const label = document.getElementById('veldLabel');
+      label.textContent = veld || 'Alle velden';
+      list.innerHTML = '';
+
+      rows.forEach(row => {
+        const div = document.createElement('div');
+        div.className = 'startlist-row';
+        div.innerHTML = `<div class="startlist-name">${row.name || ''}</div><div class="startlist-club">${row.club || ''}</div>`;
+        list.appendChild(div);
+      });
+    }
+
+    async function refresh() {
+      const veld = getParam('veld');
+      await loadStartlist(veld);
+    }
+
+    refresh();
+    setInterval(refresh, 1500);
+  </script>
+</body>
+</html>
