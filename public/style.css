@@ -245,6 +245,111 @@ body {
   color: var(--boreas-white);
 }
 
+.startlist-page {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background: transparent;
+  color: var(--boreas-white);
+  overflow: hidden;
+}
+
+.startlist-topbar {
+  min-height: 44px;
+  position: relative;
+  background: linear-gradient(115deg, var(--boreas-deep-blue), var(--boreas-blue), var(--boreas-deep-blue));
+  background-size: 180% 100%;
+  opacity: var(--overlay-opacity);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--boreas-light);
+  overflow: hidden;
+  animation: overlayBlueFlow 3.5s ease-in-out infinite;
+}
+
+.startlist-topbar::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  transform: translateX(-90%) skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(234, 247, 255, 0.38), transparent);
+  filter: blur(7px);
+  animation: overlayShimmer 2.8s ease-in-out infinite;
+}
+
+.startlist-topbar-chevron {
+  font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--boreas-light);
+  line-height: 1;
+}
+
+.startlist-topbar-field {
+  font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--boreas-white);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.startlist-content {
+  position: relative;
+  background: var(--panel-bg);
+  opacity: var(--overlay-opacity);
+  padding: 16px 30px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 44px);
+  border-left: 1px solid var(--boreas-light);
+  border-right: 1px solid var(--boreas-light);
+}
+
+.startlist-title {
+  font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--boreas-white);
+  border-left: 3px solid var(--boreas-light);
+  padding-left: 8px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.startlist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.startlist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 10px;
+  background: rgba(0, 0, 0, 0.38);
+  border-left: 2px solid var(--boreas-blue);
+  border-bottom: 1px solid rgba(234,247,255,0.2);
+}
+
+.startlist-name {
+  font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--boreas-white);
+}
+
+.startlist-club {
+  font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
+  font-size: 16px;
+  color: var(--boreas-light);
+  text-align: right;
+}
+
 @keyframes overlayBlueFlow {
   50% {
     background-position: 100% 0%;

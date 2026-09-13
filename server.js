@@ -19,6 +19,7 @@ const overlayState = {
   liveRoute: "/live.html?veld=Mix2x",
   startlistRoute: "/startlist.html?veld=Mix2x",
   activeField: "Mix2x",
+  activeCat: "",
   mode: "timetrial",
   autoRefresh: true,
   compactNames: true,
@@ -46,6 +47,9 @@ app.post("/api/overlay-state", (req, res) => {
     }
     if (typeof body.activeField === "string" && body.activeField) {
       overlayState.activeField = body.activeField;
+    }
+    if (typeof body.activeCat === "string") {
+      overlayState.activeCat = body.activeCat || '';
     }
     if (typeof body.mode === "string" && body.mode) {
       overlayState.mode = body.mode;
@@ -76,6 +80,16 @@ export function routeFieldFromRoute(route) {
   }
 }
 
+export function routeCatFromRoute(route) {
+  try {
+    if (!route || !route.includes('?')) return '';
+    const params = new URLSearchParams(route.split('?')[1] || '');
+    return params.get('cat') || '';
+  } catch (e) {
+    return '';
+  }
+}
+
 export function resolveFieldForPage(pageUrl, route, activeField) {
   try {
     const url = new URL(pageUrl, 'http://localhost:5000');
@@ -93,6 +107,14 @@ export function resolveFieldForPage(pageUrl, route, activeField) {
 
 function normalizeFieldName(field) {
   return String(field || '').trim().toLowerCase();
+}
+
+export function isFamilyCategory(cat) {
+  return /F[A-Q][0-9]*$/i.test(String(cat || ''));
+}
+
+export function isFamilyName(name) {
+  return /^F[A-Q][0-9]*$/i.test(String(name || ''));
 }
 
 function categoryMatchesField(cat, veld) {
@@ -140,10 +162,18 @@ function formatMsToTime(ms) {
   return `${mm}:${ss}`;
 }
 
+function cleanDisplayText(text) {
+  return String(text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\u00a0/g, ' ')
+    .trim();
+}
+
 function shortenDisplayName(name, maxLength = 24) {
   if (!name) return "";
 
-  const normalized = String(name).trim();
+  const normalized = cleanDisplayText(name);
 
   if (normalized === "Strijkend tegen stromend water") {
     return "Strijkend tegen strom...";
@@ -309,13 +339,13 @@ async function fetchResults() {
       const ms = parseTimeToMs(result);
 
       return {
-        name: row.Name || "",
-        cat: row.Cat || "",
-        club: row.Club || "",
-        start: row.TmSplit1 || "",
-        finish: row.TmSplit5 || row.Result || "",
-        result,
-        penalty: row.Penalty || "",
+        name: cleanDisplayText(row.Name || ""),
+        cat: cleanDisplayText(row.Cat || ""),
+        club: cleanDisplayText(row.Club || ""),
+        start: cleanDisplayText(row.TmSplit1 || ""),
+        finish: cleanDisplayText(row.TmSplit5 || row.Result || ""),
+        result: cleanDisplayText(result),
+        penalty: cleanDisplayText(row.Penalty || ""),
         ms
       };
     });
@@ -335,16 +365,16 @@ app.get("/api/results", async (req, res) => {
 });
 
 function toBaseField(cat) {
-  return String(cat).replace(/F[A-Q]$/i, "");
+  return String(cat).replace(/F[A-Q][0-9]*$/i, "");
 }
 
 function familyFromCategory(cat) {
-  const match = String(cat).match(/F([A-Q])$/i);
+  const match = String(cat).match(/F([A-Q])[0-9]*$/i);
   if (!match) return { field: String(cat), label: "Timetrial", familyLetter: null };
 
   const letter = String(match[1]).toUpperCase();
   return {
-    field: String(cat).replace(/F[A-Q]$/i, ""),
+    field: String(cat).replace(/F[A-Q][0-9]*$/i, ""),
     label: `${letter} Finale`,
     familyLetter: letter
   };
@@ -393,10 +423,14 @@ app.get("/api/dashboard", async (req, res) => {
       }
 
       const baseField = toBaseField(normalized);
+      const routeForMode = label === 'Timetrial'
+        ? `/overlay.html?veld=${encodeURIComponent(baseField)}`
+        : `/overlay.html?veld=${encodeURIComponent(baseField)}&cat=${encodeURIComponent(normalized)}`;
+
       const mode = {
         label,
         cat: normalized,
-        route: `/overlay.html?veld=${encodeURIComponent(baseField)}`
+        route: routeForMode
       };
 
       if (label === 'Timetrial') {
@@ -435,20 +469,34 @@ app.get("/api/dashboard", async (req, res) => {
 app.get("/api/finale", async (req, res) => {
   try {
     const veld = req.query.veld ? String(req.query.veld) : '';
+    const cat = req.query.cat ? String(req.query.cat) : '';
     const data = await fetchResults();
-    const filtered = veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data;
 
-    const timeRows = filtered.filter(r => r.ms !== null);
-    const sorted = timeRows.sort((a, b) => a.ms - b.ms);
-    const fastest = sorted[0] || null;
-    const second = sorted[1] || null;
+    let filtered = data
+      .filter(r => !isFamilyCategory(r.cat))
+      .filter(r => !isFamilyName(r.name));
+
+    if (veld) {
+      filtered = filtered.filter(r => categoryMatchesField(r.cat, veld));
+    }
+
+    if (cat) {
+      filtered = filtered.filter(r => normalizeFieldName(r.cat) === normalizeFieldName(toBaseField(cat)));
+    }
+
+    const timed = filtered.filter(r => r.ms !== null);
+    const untimed = filtered.filter(r => r.ms === null);
+    const sortedTimed = [...timed].sort((a, b) => a.ms - b.ms);
+
+    const fastest = sortedTimed[0] || untimed[0] || null;
+    const second = sortedTimed[1] || untimed[1] || null;
 
     res.json({
       fastest: fastest
-        ? { ...fastest, displayTime: formatMsToTime(fastest.ms) }
+        ? { ...fastest, displayTime: fastest.ms === null ? '' : formatMsToTime(fastest.ms) }
         : null,
       second: second
-        ? { ...second, displayTime: formatMsToTime(second.ms) }
+        ? { ...second, displayTime: second.ms === null ? '' : formatMsToTime(second.ms) }
         : null
     });
   } catch (e) {
@@ -462,10 +510,10 @@ function extractStartlistRows(html, veld) {
   const rows = [];
 
   $(".RowToSort").each((_, row) => {
-    const cat = $(row).find(".LineCategory").first().text().trim();
-    const club = $(row).find(".LineClub").first().text().trim();
-    const name = $(row).find(".Name .Type_black_10").first().text().trim()
-      || $(row).find(".Name").first().text().trim();
+    const cat = cleanDisplayText($(row).find(".LineCategory").first().text().trim());
+    const club = cleanDisplayText($(row).find(".LineClub").first().text().trim());
+    const name = cleanDisplayText($(row).find(".Name .Type_black_10").first().text().trim()
+      || $(row).find(".Name").first().text().trim());
 
     if (!cat || !name) return;
     if (veld && !categoryMatchesField(cat, veld)) return;
@@ -516,14 +564,16 @@ app.get("/api/timetrial", async (req, res) => {
     const veld = req.query.veld ? String(req.query.veld) : '';
     const compact = req.query.compact === "1" || req.query.compact === "true";
     const data = await fetchResults();
-    const filtered = veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data;
+    const filtered = (veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data)
+      .filter(r => !isFamilyCategory(r.cat))
+      .filter(r => !isFamilyName(r.name));
+
     const sorted = filtered
       .filter(r => r.ms !== null)
       .sort((a, b) => a.ms - b.ms);
 
     const list = sorted.map(r => ({
       name: compact ? shortenDisplayName(r.name, 24) : r.name,
-      cat: r.cat,
       club: r.club,
       displayTime: formatMsToTime(r.ms)
     }));
@@ -532,7 +582,6 @@ app.get("/api/timetrial", async (req, res) => {
       .filter(r => r.ms === null)
       .map(r => ({
         name: compact ? shortenDisplayName(r.name, 24) : r.name,
-        cat: r.cat,
         club: r.club,
         displayTime: formatMsToTime(null)
       }));
@@ -548,7 +597,10 @@ app.get("/api/live", async (req, res) => {
   try {
     const veld = req.query.veld ? String(req.query.veld) : '';
     const data = await fetchResults();
-    const filtered = veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data;
+    const filtered = (veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data)
+      .filter(r => !isFamilyCategory(r.cat))
+      .filter(r => !isFamilyName(r.name));
+
     const timed = filtered.filter(r => r.ms !== null);
     const fastest = [...timed].sort((a, b) => a.ms - b.ms)[0] || null;
     const latest = timed[timed.length - 1] || null;

@@ -136,10 +136,12 @@
       activeMode: null
     };
 
-    function routeStateForField(field, modeLabelText) {
+    function routeStateForField(field, modeLabelText, modeCat) {
       const fieldName = field || dashboardPage.activeField || '';
+      const isFinaleMode = /Finale/i.test(modeLabelText || '');
       const routeField = globalUrlToggle.checked ? '' : '?veld=' + encodeURIComponent(fieldName);
-      const route = globalUrlToggle.checked ? '/overlay.html' : '/overlay.html' + routeField;
+      const routeCat = isFinaleMode && modeCat ? '&cat=' + encodeURIComponent(modeCat) : '';
+      const route = globalUrlToggle.checked ? '/overlay.html' : '/overlay.html' + routeField + routeCat;
       const liveRoute = globalUrlToggle.checked ? '/live.html' : '/live.html' + routeField;
       const startlistRoute = globalUrlToggle.checked ? '/startlist.html' : '/startlist.html' + routeField;
 
@@ -267,7 +269,7 @@
           modeBtn.addEventListener('click', () => {
             dashboardPage.activeMode = mode;
             const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field) || '';
-            const routePatch = routeStateForField(activeField, mode.label);
+              const routePatch = routeStateForField(activeField, mode.label, mode.cat);
             urlPreview.textContent = routePatch.route;
             document.querySelectorAll('.mode-button').forEach(b => b.classList.toggle('selected', b === modeBtn));
 

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 process.env.NODE_ENV = 'test';
-const { resolveFieldForPage, routeFieldFromRoute } = await import('./server.js');
+const { resolveFieldForPage, routeFieldFromRoute, routeCatFromRoute, isFamilyCategory } = await import('./server.js');
 
 function normalizeBrowserSourceCat(cat) {
   return String(cat).replace(/F[A-Q]$/i, '');
@@ -50,4 +50,16 @@ test('field resolution prefers the page URL query string and falls back to route
   assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html?veld=H2x', '/overlay.html?veld=Mix2x', 'Mix2x'), 'H2x');
   assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html', '/overlay.html?veld=Mix2x', 'H2x'), 'Mix2x');
   assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html', '/overlay.html', 'H2x'), 'H2x');
+});
+
+test('dashboard route parser can keep an exact family category in the route when a finale mode is chosen', () => {
+  assert.equal(routeFieldFromRoute('/overlay.html?veld=Mix2x&cat=Mix2xFA'), 'Mix2x');
+  assert.equal(routeCatFromRoute('/overlay.html?veld=Mix2x&cat=Mix2xFA'), 'Mix2xFA');
+});
+
+test('timetrial family rows must be classified out of the base timetrial payload even when the category includes a numbered family suffix', () => {
+  assert.equal(isFamilyCategory('Mix2xFA1'), true);
+  assert.equal(isFamilyCategory('Mix2xFA2'), true);
+  assert.equal(isFamilyCategory('Mix2xFB1'), true);
+  assert.equal(isFamilyCategory('Mix2x'), false);
 });

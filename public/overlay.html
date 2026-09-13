@@ -18,7 +18,7 @@
       <div class="overlay-header">
         <img src="Boreas.png" class="logo" alt="Boreas">
         <div class="title">
-          <div class="title-main">Strijkbokaal Finale</div>
+          <div class="title-main" id="titleMain">Strijkbokaal Finale</div>
           <div class="title-sub">Boreas Race Results</div>
         </div>
       </div>
@@ -39,7 +39,6 @@
       </div>
 
       <div class="timetrial-block">
-        <div class="timetrial-title">Timetrial resultaten</div>
         <div class="timetrial-list" id="timetrialList"></div>
       </div>
     </div>
@@ -62,26 +61,43 @@
         }
       }
 
-      async function loadFinale(veld) {
-        const res = await fetch(`/api/finale?veld=${encodeURIComponent(veld || "")}`);
+      function routeCat(route) {
+        try {
+          if (!route || !route.includes('?')) return '';
+          const params = new URLSearchParams(route.split('?')[1] || '');
+          return params.get('cat') || '';
+        } catch (e) {
+          return '';
+        }
+      }
+
+      async function loadFinale(veld, cat) {
+        const res = await fetch(`/api/finale?veld=${encodeURIComponent(veld || "")}&cat=${encodeURIComponent(cat || "")}`);
         const data = await res.json();
+
+        const titleMain = document.getElementById("titleMain");
+        const label = cat ? `Resultaten ${cat.replace(/^[A-Z0-9+]+/i, '').replace(/F([A-Q])[0-9]*$/i, '$1 Finale')}` : 'Strijkbokaal Finale';
+        titleMain.textContent = label;
 
         document.getElementById("veldLabel").textContent = veld || "Alle velden";
 
-        if (data.fastest) {
-          document.getElementById("fastestName").textContent = data.fastest.name;
-          document.getElementById("fastestClub").textContent = data.fastest.club;
-          document.getElementById("fastestTime").textContent = data.fastest.displayTime;
+        const fastest = data.fastest || null;
+        const second = data.second || null;
+
+        if (fastest) {
+          document.getElementById("fastestName").textContent = fastest.name;
+          document.getElementById("fastestClub").textContent = fastest.club;
+          document.getElementById("fastestTime").textContent = fastest.displayTime || "";
         } else {
           document.getElementById("fastestName").textContent = "—";
           document.getElementById("fastestClub").textContent = "";
           document.getElementById("fastestTime").textContent = "";
         }
 
-        if (data.second) {
-          document.getElementById("secondName").textContent = data.second.name;
-          document.getElementById("secondClub").textContent = data.second.club;
-          document.getElementById("secondTime").textContent = data.second.displayTime;
+        if (second) {
+          document.getElementById("secondName").textContent = second.name;
+          document.getElementById("secondClub").textContent = second.club;
+          document.getElementById("secondTime").textContent = second.displayTime || "";
         } else {
           document.getElementById("secondName").textContent = "—";
           document.getElementById("secondClub").textContent = "";
@@ -102,7 +118,6 @@
           row.innerHTML = `
             <div class="tt-name">${item.name}</div>
             <div class="tt-club">${item.club}</div>
-            <div class="tt-cat">${item.cat}</div>
             <div class="tt-time">${item.displayTime}</div>
           `;
           container.appendChild(row);
@@ -121,7 +136,6 @@
           item.innerHTML = `
             <div class="tt-name">${row.name || ''}</div>
             <div class="tt-club">${row.club || ''}</div>
-            <div class="tt-cat">${row.cat || ''}</div>
             <div class="tt-time">--:--,--</div>
           `;
           container.appendChild(item);
@@ -133,7 +147,9 @@
         const state = await stateRes.json();
         const route = state.globalUrlToggle ? '/overlay.html' : (state.route || '/overlay.html');
         const urlVeld = getParam('veld') || '';
+        const urlCat = getParam('cat') || '';
         const veld = urlVeld || routeField(route) || state.activeField || '';
+        const cat = urlCat || routeCat(route) || state.activeCat || '';
         const mode = String(state.mode || 'Timetrial');
 
         document.getElementById('veldLabel').textContent = veld || 'Alle velden';
@@ -144,7 +160,7 @@
         }
 
         if (/Finale/i.test(mode)) {
-          await loadFinale(veld);
+          await loadFinale(veld, cat);
           return;
         }
 
