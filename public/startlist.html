@@ -24,6 +24,16 @@
       return url.searchParams.get(name);
     }
 
+    function routeField(route) {
+      try {
+        if (!route || !route.includes('?')) return '';
+        const params = new URLSearchParams(route.split('?')[1] || '');
+        return params.get('veld') || '';
+      } catch (e) {
+        return '';
+      }
+    }
+
     async function loadStartlist(veld) {
       const res = await fetch(`/api/startlist?veld=${encodeURIComponent(veld || '')}`);
       const rows = await res.json();
@@ -41,12 +51,21 @@
     }
 
     async function refresh() {
-      const veld = getParam('veld');
+      const stateRes = await fetch('/api/overlay-state');
+      const state = await stateRes.json();
+      const route = state.globalUrlToggle ? '/startlist.html' : (state.startlistRoute || '/startlist.html');
+      const veld = routeField(route);
       await loadStartlist(veld);
     }
 
     refresh();
-    setInterval(refresh, 1500);
+    fetch('/api/overlay-state')
+      .then(res => res.json())
+      .then(state => {
+        if (state.autoRefresh !== false) {
+          setInterval(refresh, 1500);
+        }
+      });
   </script>
 </body>
 </html>

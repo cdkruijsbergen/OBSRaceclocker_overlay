@@ -36,3 +36,16 @@ test('dashboard family labels extend through FA..FQ', () => {
   assert.equal(labelForCategory('HC4+FP'), 'P Finale');
   assert.equal(labelForCategory('HC4+FQ'), 'Q Finale');
 });
+
+test('dashboard route parser can read the active field from a browser source route', () => {
+  function parseFieldFromRoute(route) {
+    if (!route || !route.includes('?')) return null;
+    const search = route.split('?')[1] || '';
+    const params = new URLSearchParams(search);
+    return params.get('veld');
+  }
+
+  assert.equal(parseFieldFromRoute('/overlay.html?veld=h2x'), 'h2x');
+  assert.equal(parseFieldFromRoute('/startlist.html?veld=Mix2x'), 'Mix2x');
+  assert.equal(parseFieldFromRoute('/overlay.html'), null);
+});

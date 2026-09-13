@@ -14,9 +14,13 @@ app.use(express.json());
 
 const overlayState = {
   globalUrlToggle: false,
-  route: "/overlay.html",
-  liveRoute: "/live.html",
-  startlistRoute: "/startlist.html"
+  route: "/overlay.html?veld=Mix2x",
+  liveRoute: "/live.html?veld=Mix2x",
+  startlistRoute: "/startlist.html?veld=Mix2x",
+  mode: "timetrial",
+  autoRefresh: true,
+  compactNames: true,
+  barColor: "#005391"
 };
 
 app.get("/api/overlay-state", (req, res) => {
@@ -37,6 +41,18 @@ app.post("/api/overlay-state", (req, res) => {
     }
     if (typeof body.startlistRoute === "string" && body.startlistRoute) {
       overlayState.startlistRoute = body.startlistRoute;
+    }
+    if (typeof body.mode === "string" && body.mode) {
+      overlayState.mode = body.mode;
+    }
+    if (typeof body.autoRefresh === "boolean") {
+      overlayState.autoRefresh = body.autoRefresh;
+    }
+    if (typeof body.compactNames === "boolean") {
+      overlayState.compactNames = body.compactNames;
+    }
+    if (typeof body.barColor === "string" && body.barColor) {
+      overlayState.barColor = body.barColor;
     }
     res.json(overlayState);
   } catch (e) {
@@ -182,10 +198,6 @@ async function fetchCategories() {
   let html = '';
 
   try {
-    html = await readFile(LOCAL_STARTLIST_HTML, "utf8");
-    console.log('local_startlist_loaded', LOCAL_STARTLIST_HTML, html.length);
-  } catch (e) {
-    console.log('local_startlist_miss', e.message);
     const res = await fetch(RACE_STARTLIST_URL, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
@@ -200,6 +212,15 @@ async function fetchCategories() {
 
     html = await res.text();
     console.log('remote_startlist_loaded', html.length);
+  } catch (e) {
+    console.log('remote_startlist_miss', e.message);
+    try {
+      html = await readFile(LOCAL_STARTLIST_HTML, "utf8");
+      console.log('local_startlist_loaded', LOCAL_STARTLIST_HTML, html.length);
+    } catch (localErr) {
+      console.log('local_startlist_miss', localErr.message);
+      throw localErr;
+    }
   }
 
   const allCategories = extractCategoriesFromStartlistHTML(html);
@@ -211,10 +232,6 @@ async function fetchResults() {
   let html = '';
 
   try {
-    html = await readFile(LOCAL_HTML, "utf8");
-    console.log('local_html_loaded', LOCAL_HTML, html.length);
-  } catch (e) {
-    console.log('local_html_miss', e.message);
     const res = await fetch(RACE_URL, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
@@ -229,6 +246,15 @@ async function fetchResults() {
 
     html = await res.text();
     console.log('remote_html_loaded', html.length);
+  } catch (e) {
+    console.log('remote_html_miss', e.message);
+    try {
+      html = await readFile(LOCAL_HTML, "utf8");
+      console.log('local_html_loaded', LOCAL_HTML, html.length);
+    } catch (localErr) {
+      console.log('local_html_miss', localErr.message);
+      throw localErr;
+    }
   }
 
   const allResults = extractAllResults(html);

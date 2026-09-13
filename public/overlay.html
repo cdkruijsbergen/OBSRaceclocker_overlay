@@ -52,6 +52,16 @@
         return url.searchParams.get(name);
       }
 
+      function routeField(route) {
+        try {
+          if (!route || !route.includes('?')) return '';
+          const params = new URLSearchParams(route.split('?')[1] || '');
+          return params.get('veld') || '';
+        } catch (e) {
+          return '';
+        }
+      }
+
       async function loadFinale(veld) {
         const res = await fetch(`/api/finale?veld=${encodeURIComponent(veld || "")}`);
         const data = await res.json();
@@ -79,8 +89,9 @@
         }
       }
 
-      async function loadTimetrial(veld) {
-        const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}`);
+      async function loadTimetrial(veld, compactNames) {
+        const compact = compactNames ? 1 : 0;
+        const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}&compact=${compact}`);
         const list = await res.json();
         const container = document.getElementById("timetrialList");
         container.innerHTML = "";
@@ -99,13 +110,22 @@
       }
 
       async function refresh() {
-        const veld = getParam("veld");
+        const stateRes = await fetch('/api/overlay-state');
+        const state = await stateRes.json();
+        const route = state.globalUrlToggle ? '/overlay.html' : (state.route || '/overlay.html');
+        const veld = routeField(route);
         await loadFinale(veld);
-        await loadTimetrial(veld);
+        await loadTimetrial(veld, state.compactNames !== false);
       }
 
       refresh();
-      setInterval(refresh, 2000); // elke 2s verversen
+      fetch('/api/overlay-state')
+        .then(res => res.json())
+        .then(state => {
+          if (state.autoRefresh !== false) {
+            setInterval(refresh, 2000); // elke 2s verversen
+          }
+        });
     </script>
   </div>
 </body>

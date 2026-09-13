@@ -24,6 +24,16 @@
       return url.searchParams.get(name);
     }
 
+    function routeField(route) {
+      try {
+        if (!route || !route.includes('?')) return '';
+        const params = new URLSearchParams(route.split('?')[1] || '');
+        return params.get('veld') || '';
+      } catch (e) {
+        return '';
+      }
+    }
+
     function shortenDisplayName(name) {
       const value = String(name || "").trim();
       if (value === "Strijkend tegen stromend water") {
@@ -35,8 +45,9 @@
       return value;
     }
 
-    async function loadTimetrial(veld) {
-      const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}&compact=1`);
+    async function loadTimetrial(veld, compactNames) {
+      const compact = compactNames ? 1 : 0;
+      const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}&compact=${compact}`);
       const list = await res.json();
       const container = document.getElementById("timetrialList");
       const veldLabel = document.getElementById("veldLabel");
@@ -48,7 +59,7 @@
         const row = document.createElement("div");
         row.className = "live-timetrial-row";
         row.innerHTML = `
-          <div class="live-tt-name">${shortenDisplayName(item.name)}</div>
+          <div class="live-tt-name">${compactNames ? shortenDisplayName(item.name) : item.name}</div>
           <div class="live-tt-club">${item.club}</div>
           <div class="live-tt-time">${item.displayTime}</div>
         `;
@@ -57,12 +68,21 @@
     }
 
     async function refresh() {
-      const veld = getParam("veld");
-      await loadTimetrial(veld);
+      const stateRes = await fetch('/api/overlay-state');
+      const state = await stateRes.json();
+      const route = state.globalUrlToggle ? '/live.html' : (state.liveRoute || '/live.html');
+      const veld = routeField(route);
+      await loadTimetrial(veld, state.compactNames !== false);
     }
 
     refresh();
-    setInterval(refresh, 1500);
+    fetch('/api/overlay-state')
+      .then(res => res.json())
+      .then(state => {
+        if (state.autoRefresh !== false) {
+          setInterval(refresh, 1500);
+        }
+      });
   </script>
 </body>
 </html>

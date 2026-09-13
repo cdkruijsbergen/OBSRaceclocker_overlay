@@ -111,8 +111,16 @@
       try {
         const res = await fetch('/api/overlay-state');
         const state = await res.json();
+        globalUrlToggle.checked = Boolean(state.globalUrlToggle);
+        autoRefreshToggle.checked = state.autoRefresh !== false;
+        compactNamesToggle.checked = state.compactNames !== false;
+        if (state.barColor) {
+          barColor.value = state.barColor;
+          document.documentElement.style.setProperty('--dash-blue', state.barColor);
+          const page = document.querySelector('.dashboard-page');
+          if (page) page.style.borderColor = state.barColor;
+        }
         if (state.globalUrlToggle === true) {
-          globalUrlToggle.checked = true;
           const preview = document.getElementById('urlPreview');
           preview.textContent = '/overlay.html';
         }
@@ -127,6 +135,21 @@
       activeField: null,
       activeMode: null
     };
+
+    function routeStateForField(field, modeLabelText) {
+      const fieldName = field || dashboardPage.activeField || '';
+      const routeField = globalUrlToggle.checked ? '' : '?veld=' + encodeURIComponent(fieldName);
+      const route = globalUrlToggle.checked ? '/overlay.html' : '/overlay.html' + routeField;
+      const liveRoute = globalUrlToggle.checked ? '/live.html' : '/live.html' + routeField;
+      const startlistRoute = globalUrlToggle.checked ? '/startlist.html' : '/startlist.html' + routeField;
+
+      return {
+        route,
+        liveRoute,
+        startlistRoute,
+        mode: String(modeLabelText || 'Timetrial')
+      };
+    }
 
     function modeLabel(mode) {
       if (mode === 'timetrial') return 'Timetrial';
@@ -162,23 +185,34 @@
           startlistRoute: '/startlist.html'
         });
       } else {
-        const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field);
-        const activeMode = dashboardPage.activeMode || (dashboardPage.fields[0] && dashboardPage.fields[0].modes && dashboardPage.fields[0].modes[0]);
-        const baseRoute = activeMode ? activeMode.route : '/overlay.html?veld=' + encodeURIComponent(activeField || '');
-        preview.textContent = baseRoute;
+        const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field) || '';
+        const route = '/overlay.html?veld=' + encodeURIComponent(activeField);
+        const liveRoute = '/live.html?veld=' + encodeURIComponent(activeField);
+        const startlistRoute = '/startlist.html?veld=' + encodeURIComponent(activeField);
+        preview.textContent = route;
         sendOverlayState({
           globalUrlToggle: false,
-          route: baseRoute,
-          liveRoute: '/live.html?veld=' + encodeURIComponent(activeField || ''),
-          startlistRoute: '/startlist.html?veld=' + encodeURIComponent(activeField || '')
+          route,
+          liveRoute,
+          startlistRoute
         });
       }
     });
 
+    autoRefreshToggle.addEventListener('change', () => {
+      sendOverlayState({ autoRefresh: autoRefreshToggle.checked });
+    });
+
+    compactNamesToggle.addEventListener('change', () => {
+      sendOverlayState({ compactNames: compactNamesToggle.checked });
+    });
+
     barColor.addEventListener('input', () => {
-      document.documentElement.style.setProperty('--dash-blue', barColor.value);
+      const color = barColor.value || '#005391';
+      document.documentElement.style.setProperty('--dash-blue', color);
       const page = document.querySelector('.dashboard-page');
-      if (page) page.style.borderColor = barColor.value;
+      if (page) page.style.borderColor = color;
+      sendOverlayState({ barColor: color });
     });
 
     async function loadDashboard() {
@@ -199,10 +233,14 @@
           dashboardPage.activeField = field.field;
           renderModes(field);
           document.querySelectorAll('.field-button').forEach(b => b.classList.toggle('selected', b === btn));
+
+          const routePatch = routeStateForField(field.field, 'Timetrial');
           sendOverlayState({
-            route: '/overlay.html?veld=' + encodeURIComponent(field.field),
-            liveRoute: '/live.html?veld=' + encodeURIComponent(field.field),
-            startlistRoute: '/startlist.html?veld=' + encodeURIComponent(field.field)
+            globalUrlToggle: globalUrlToggle.checked,
+            route: routePatch.route,
+            liveRoute: routePatch.liveRoute,
+            startlistRoute: routePatch.startlistRoute,
+            mode: routePatch.mode
           });
         });
         fieldList.appendChild(btn);
@@ -224,15 +262,17 @@
           modeBtn.textContent = mode.label;
           modeBtn.addEventListener('click', () => {
             dashboardPage.activeMode = mode;
-            const route = globalUrlToggle.checked
-              ? '/overlay.html'
-              : (mode.route || '/overlay.html?veld=' + encodeURIComponent(mode.cat));
-            urlPreview.textContent = route;
+            const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field) || '';
+            const routePatch = routeStateForField(activeField, mode.label);
+            urlPreview.textContent = routePatch.route;
             document.querySelectorAll('.mode-button').forEach(b => b.classList.toggle('selected', b === modeBtn));
+
             sendOverlayState({
-              route,
-              liveRoute: '/live.html?veld=' + encodeURIComponent(mode.cat),
-              startlistRoute: '/startlist.html?veld=' + encodeURIComponent(mode.cat)
+              globalUrlToggle: globalUrlToggle.checked,
+              route: routePatch.route,
+              liveRoute: routePatch.liveRoute,
+              startlistRoute: routePatch.startlistRoute,
+              mode: routePatch.mode
             });
           });
           modeList.appendChild(modeBtn);
