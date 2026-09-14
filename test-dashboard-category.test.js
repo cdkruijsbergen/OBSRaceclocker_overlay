@@ -72,6 +72,15 @@ test('finale category filtering must compare against the requested family catego
   assert.equal(categoryMatchesFinalCategory('H2x', 'H2xFA'), false);
 });
 
+test('overlay timetrial requests full names while live requests can preserve the compact shortening behavior', () => {
+  const overlayHtml = readFileSync(new URL('./public/overlay.html', import.meta.url), 'utf8');
+  const liveHtml = readFileSync(new URL('./public/live.html', import.meta.url), 'utf8');
+
+  assert.equal(overlayHtml.includes('loadTimetrial(veld, state.compactNames !== false)'), false);
+  assert.equal(overlayHtml.includes('const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}`);'), true);
+  assert.equal(liveHtml.includes('const compact = compactNames ? 1 : 0;'), true);
+});
+
 test('overlay finale markup no longer exposes fastest and second-fastest rows in the public overlay HTML', () => {
   const html = readFileSync(new URL('./public/overlay.html', import.meta.url), 'utf8');
 

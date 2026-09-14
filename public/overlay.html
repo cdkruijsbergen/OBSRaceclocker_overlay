@@ -86,9 +86,8 @@
         });
       }
 
-      async function loadTimetrial(veld, compactNames) {
-        const compact = compactNames ? 1 : 0;
-        const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}&compact=${compact}`);
+      async function loadTimetrial(veld) {
+        const res = await fetch(`/api/timetrial?veld=${encodeURIComponent(veld || "")}`);
         const list = await res.json();
         const container = document.getElementById("timetrialList");
         container.innerHTML = "";
@@ -146,7 +145,7 @@
           return;
         }
 
-        await loadTimetrial(veld, state.compactNames !== false);
+        await loadTimetrial(veld);
       }
 
       refresh();

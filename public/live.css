@@ -101,9 +101,9 @@ body {
 
 .live-summary-row {
   display: grid;
-  grid-template-columns: 88px minmax(90px, 1fr) minmax(50px, 1fr) 46px 68px;
+  grid-template-columns: 88px minmax(90px, 1fr) minmax(50px, 1fr) 50px 68px;
   align-items: center;
-  column-gap: 3px;
+  column-gap: 6px;
   row-gap: 4px;
   min-height: 30px;
   border-bottom: 1px solid rgba(234, 247, 255, 0.18);

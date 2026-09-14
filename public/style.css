@@ -32,14 +32,14 @@ body {
 }
 
 .overlay-topbar {
-  min-height: 70px;
+  min-height: 88px;
   position: relative;
   background: linear-gradient(115deg, var(--boreas-deep-blue), var(--boreas-blue), var(--boreas-deep-blue));
   background-size: 180% 100%;
   opacity: var(--overlay-opacity);
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 28px;
   border-bottom: 1px solid var(--boreas-light);
   overflow: hidden;
   animation: overlayBlueFlow 3.5s ease-in-out infinite;
@@ -64,7 +64,7 @@ body {
 
 .topbar-chevron {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 44px;
+  font-size: 48px;
   font-weight: 800;
   color: var(--boreas-light);
   line-height: 1;
@@ -72,7 +72,7 @@ body {
 
 .topbar-field {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 40px;
+  font-size: 44px;
   font-weight: 800;
   color: var(--boreas-white);
   letter-spacing: 0.04em;
@@ -82,20 +82,20 @@ body {
 
 .topbar-mode {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--boreas-light);
   background: rgba(0, 31, 76, 0.4);
   border: 1px solid rgba(234, 247, 255, 0.72);
   border-radius: 999px;
-  padding: 7px 16px;
+  padding: 8px 24px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .overlay-bottombar {
-  min-height: 70px;
+  min-height: 80px;
   position: relative;
   background: linear-gradient(115deg, var(--boreas-deep-blue), var(--boreas-blue), var(--boreas-deep-blue));
   background-size: 180% 100%;
@@ -119,9 +119,9 @@ body {
   position: relative;
   background: var(--panel-bg);
   opacity: var(--overlay-opacity);
-  padding: 20px 34px;
+  padding: 32px 60px;
   box-sizing: border-box;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 168px);
   border-left: 1px solid var(--boreas-light);
   border-right: 1px solid var(--boreas-light);
 }
@@ -136,7 +136,7 @@ body {
 }
 
 .logo {
-  height: 96px;
+  height: 116px;
   width: auto;
   filter: drop-shadow(0 0 4px var(--boreas-light));
 }
@@ -144,21 +144,21 @@ body {
 .title {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .title-main {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 56px;
+  font-size: 60px;
   font-weight: 800;
   color: var(--boreas-white);
-  line-height: 1.12;
+  line-height: 1.1;
   text-transform: uppercase;
 }
 
 .title-sub {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 22px;
+  font-size: 28px;
   color: var(--boreas-light);
   opacity: 0.92;
   letter-spacing: 0.05em;
@@ -167,22 +167,22 @@ body {
 .finale-block {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin: 18px 0 20px;
+  gap: 20px;
+  margin: 24px 0 32px;
 }
 
 .finale-row {
   display: grid;
-  grid-template-columns: 180px 1fr 1fr 150px;
-  gap: 12px;
+  grid-template-columns: 300px 1fr 1fr 240px;
+  gap: 16px;
   align-items: center;
-  padding: 10px 0;
+  padding: 14px 0;
   border-left: 2px solid var(--boreas-blue);
 }
 
 .finale-label {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--boreas-light);
   text-transform: uppercase;
@@ -191,75 +191,76 @@ body {
 
 .finale-name {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 30px;
+  font-size: 50px;
   font-weight: 800;
   color: var(--boreas-white);
 }
 
 .finale-club {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 22px;
+  font-size: 40px;
   color: var(--boreas-light);
 }
 
 .finale-time {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 38px;
+  font-size: 65px;
   font-weight: 800;
   text-align: right;
   color: var(--boreas-white);
 }
 
 .timetrial-block {
-  margin-top: 12px;
+  margin-top: 16px;
 }
 
 .timetrial-title {
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 28px;
+  font-size: 36px;
   font-weight: 800;
   color: var(--boreas-light);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   text-transform: uppercase;
 }
 
 .timetrial-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .timetrial-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 140px;
-  gap: 12px;
+  grid-template-columns: 2fr 1fr 1fr 220px;
+  gap: 16px;
   align-items: center;
   font-family: "TeX Gyre Advent", "TeX Gyre Advent Bold", Arial, sans-serif;
-  font-size: 26px;
+  font-size: 28px;
   color: var(--boreas-white);
   border-bottom: 1px solid rgba(234,247,255,0.22);
-  padding: 7px 0;
+  padding: 8px 0;
 }
 
 .tt-name {
   font-weight: 700;
+  font-size: 35px;
 }
 
 .tt-club {
   color: var(--boreas-light);
-  font-size: 22px;
+  font-size: 30px;
 }
 
 .tt-cat {
   color: var(--boreas-text);
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .tt-time {
   text-align: right;
   font-weight: 800;
   color: var(--boreas-white);
-  font-size: 30px;
+  font-size: 39px;
 }
 
 .startlist-page {
