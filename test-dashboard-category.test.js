@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 process.env.NODE_ENV = 'test';
-const { resolveFieldForPage, routeFieldFromRoute, routeCatFromRoute, isFamilyCategory } = await import('./server.js');
+const { resolveFieldForPage, routeFieldFromRoute, routeCatFromRoute, isFamilyCategory, categoryMatchesFinalCategory } = await import('./server.js');
 
 function normalizeBrowserSourceCat(cat) {
   return String(cat).replace(/F[A-Q]$/i, '');
@@ -62,4 +63,24 @@ test('timetrial family rows must be classified out of the base timetrial payload
   assert.equal(isFamilyCategory('Mix2xFA2'), true);
   assert.equal(isFamilyCategory('Mix2xFB1'), true);
   assert.equal(isFamilyCategory('Mix2x'), false);
+});
+
+test('finale category filtering must compare against the requested family category instead of only the base field', () => {
+  assert.equal(categoryMatchesFinalCategory('H2xFA1', 'H2xFA'), true);
+  assert.equal(categoryMatchesFinalCategory('H2xFA2', 'H2xFA'), true);
+  assert.equal(categoryMatchesFinalCategory('H2xFB1', 'H2xFA'), false);
+  assert.equal(categoryMatchesFinalCategory('H2x', 'H2xFA'), false);
+});
+
+test('overlay finale markup no longer exposes fastest and second-fastest rows in the public overlay HTML', () => {
+  const html = readFileSync(new URL('./public/overlay.html', import.meta.url), 'utf8');
+
+  assert.equal(html.includes('id="fastestRow"'), false);
+  assert.equal(html.includes('id="secondRow"'), false);
+  assert.equal(html.includes('id="fastestName"'), false);
+  assert.equal(html.includes('id="fastestClub"'), false);
+  assert.equal(html.includes('id="fastestTime"'), false);
+  assert.equal(html.includes('id="secondName"'), false);
+  assert.equal(html.includes('id="secondClub"'), false);
+  assert.equal(html.includes('id="secondTime"'), false);
 });

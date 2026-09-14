@@ -72,6 +72,21 @@ body {
   text-transform: uppercase;
 }
 
+.live-topbar-mode {
+  font-family: var(--live-font);
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--live-soft);
+  background: rgba(0, 31, 76, 0.45);
+  border: 1px solid var(--live-line);
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin-left: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .live-content {
   padding: 8px 12px 10px;
   background: rgba(0, 0, 0, 0.42);
@@ -86,9 +101,10 @@ body {
 
 .live-summary-row {
   display: grid;
-  grid-template-columns: 88px minmax(90px, 1fr) minmax(70px, 1fr) 56px 72px;
+  grid-template-columns: 88px minmax(90px, 1fr) minmax(50px, 1fr) 46px 68px;
   align-items: center;
-  gap: 10px;
+  column-gap: 3px;
+  row-gap: 4px;
   min-height: 30px;
   border-bottom: 1px solid rgba(234, 247, 255, 0.18);
 }

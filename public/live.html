@@ -10,6 +10,7 @@
     <div class="live-topbar">
       <span class="live-topbar-chevron">»</span>
       <span class="live-topbar-field" id="veldLabel">Mix2x</span>
+      <span class="live-topbar-mode" id="modeLabel">Timetrial</span>
     </div>
 
     <div class="live-content">
@@ -50,15 +51,25 @@
       }
     }
 
+    function routeCat(route) {
+      try {
+        if (!route || !route.includes('?')) return '';
+        const params = new URLSearchParams(route.split('?')[1] || '');
+        return params.get('cat') || '';
+      } catch (e) {
+        return '';
+      }
+    }
+
     function formatSignedDiff(diff) {
       if (diff === null || diff === undefined) return '±0.00';
       const sign = diff < 0 ? '-' : '+';
       return `${sign}${String(Math.abs(diff / 1000)).padStart(4, '0')}`;
     }
 
-    async function loadLive(veld, compactNames) {
+    async function loadLive(veld, compactNames, cat) {
       const compact = compactNames ? 1 : 0;
-      const res = await fetch(`/api/live?veld=${encodeURIComponent(veld || "")}&compact=${compact}`);
+      const res = await fetch(`/api/live?veld=${encodeURIComponent(veld || "")}&cat=${encodeURIComponent(cat || "")}&compact=${compact}`);
       const data = await res.json();
       const veldLabel = document.getElementById('veldLabel');
       veldLabel.textContent = veld || 'Alle velden';
@@ -97,8 +108,15 @@
       const state = await stateRes.json();
       const route = state.globalUrlToggle ? '/live.html' : (state.liveRoute || '/live.html');
       const urlVeld = getParam('veld') || '';
+      const urlCat = getParam('cat') || '';
       const veld = urlVeld || routeField(route) || state.activeField || '';
-      await loadLive(veld, state.compactNames !== false);
+      const cat = urlCat || routeCat(route) || state.activeCat || '';
+      const mode = String(state.mode || 'Timetrial');
+
+      document.getElementById('veldLabel').textContent = veld || 'Alle velden';
+      document.getElementById('modeLabel').textContent = mode;
+
+      await loadLive(veld, state.compactNames !== false, cat);
     }
 
     refresh();

@@ -109,6 +109,29 @@ function normalizeFieldName(field) {
   return String(field || '').trim().toLowerCase();
 }
 
+export function categoryMatchesFinalCategory(cat, requestedCat) {
+  if (!requestedCat) return true;
+  const requested = String(requestedCat || '').trim();
+  const row = String(cat || '').trim();
+
+  if (!isFamilyCategory(requested)) return true;
+  if (!isFamilyCategory(row)) return false;
+
+  const rowBase = toBaseField(row);
+  const requestedBase = toBaseField(requested);
+  if (normalizeFieldName(rowBase) !== normalizeFieldName(requestedBase)) {
+    return false;
+  }
+
+  const rowMatch = row.match(/F([A-Q])[0-9]*$/i);
+  const requestedMatch = requested.match(/F([A-Q])[0-9]*$/i);
+  if (!rowMatch || !requestedMatch) {
+    return false;
+  }
+
+  return normalizeFieldName(rowMatch[1]) === normalizeFieldName(requestedMatch[1]);
+}
+
 export function isFamilyCategory(cat) {
   return /F[A-Q][0-9]*$/i.test(String(cat || ''));
 }
@@ -473,7 +496,6 @@ app.get("/api/finale", async (req, res) => {
     const data = await fetchResults();
 
     let filtered = data
-      .filter(r => !isFamilyCategory(r.cat))
       .filter(r => !isFamilyName(r.name));
 
     if (veld) {
@@ -481,8 +503,21 @@ app.get("/api/finale", async (req, res) => {
     }
 
     if (cat) {
-      filtered = filtered.filter(r => normalizeFieldName(r.cat) === normalizeFieldName(toBaseField(cat)));
+      filtered = filtered.filter(r => categoryMatchesFinalCategory(r.cat, cat));
     }
+
+    const results = filtered
+      .map(r => ({
+        name: r.name,
+        club: r.club,
+        cat: r.cat,
+        displayTime: r.ms === null ? '' : formatMsToTime(r.ms)
+      }))
+      .sort((a, b) => {
+        const left = a.displayTime === '' ? Infinity : parseTimeToMs(a.displayTime.replace(/,/g, '.')) ?? Infinity;
+        const right = b.displayTime === '' ? Infinity : parseTimeToMs(b.displayTime.replace(/,/g, '.')) ?? Infinity;
+        return left - right;
+      });
 
     const timed = filtered.filter(r => r.ms !== null);
     const untimed = filtered.filter(r => r.ms === null);
@@ -492,6 +527,7 @@ app.get("/api/finale", async (req, res) => {
     const second = sortedTimed[1] || untimed[1] || null;
 
     res.json({
+      results,
       fastest: fastest
         ? { ...fastest, displayTime: fastest.ms === null ? '' : formatMsToTime(fastest.ms) }
         : null,
@@ -596,10 +632,11 @@ app.get("/api/timetrial", async (req, res) => {
 app.get("/api/live", async (req, res) => {
   try {
     const veld = req.query.veld ? String(req.query.veld) : '';
+    const cat = req.query.cat ? String(req.query.cat) : '';
     const data = await fetchResults();
     const filtered = (veld ? data.filter(r => categoryMatchesField(r.cat, veld)) : data)
-      .filter(r => !isFamilyCategory(r.cat))
-      .filter(r => !isFamilyName(r.name));
+      .filter(r => !isFamilyName(r.name))
+      .filter(r => cat ? categoryMatchesFinalCategory(r.cat, cat) : !isFamilyCategory(r.cat));
 
     const timed = filtered.filter(r => r.ms !== null);
     const fastest = [...timed].sort((a, b) => a.ms - b.ms)[0] || null;

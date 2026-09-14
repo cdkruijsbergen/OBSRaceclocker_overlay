@@ -11,6 +11,7 @@
       <div class="topbar-strip">
         <span class="topbar-chevron">»</span>
         <span class="topbar-field" id="veldLabel">Mix2x</span>
+        <span class="topbar-mode" id="modeLabel">Timetrial</span>
       </div>
     </div>
 
@@ -24,18 +25,6 @@
       </div>
 
       <div class="finale-block">
-        <div class="finale-row" id="fastestRow">
-          <div class="finale-label">Snelste tijd</div>
-          <div class="finale-name" id="fastestName"></div>
-          <div class="finale-club" id="fastestClub"></div>
-          <div class="finale-time" id="fastestTime"></div>
-        </div>
-        <div class="finale-row" id="secondRow">
-          <div class="finale-label">Tweede tijd</div>
-          <div class="finale-name" id="secondName"></div>
-          <div class="finale-club" id="secondClub"></div>
-          <div class="finale-time" id="secondTime"></div>
-        </div>
       </div>
 
       <div class="timetrial-block">
@@ -81,28 +70,20 @@
 
         document.getElementById("veldLabel").textContent = veld || "Alle velden";
 
-        const fastest = data.fastest || null;
-        const second = data.second || null;
+        const container = document.getElementById("timetrialList");
+        container.innerHTML = "";
 
-        if (fastest) {
-          document.getElementById("fastestName").textContent = fastest.name;
-          document.getElementById("fastestClub").textContent = fastest.club;
-          document.getElementById("fastestTime").textContent = fastest.displayTime || "";
-        } else {
-          document.getElementById("fastestName").textContent = "—";
-          document.getElementById("fastestClub").textContent = "";
-          document.getElementById("fastestTime").textContent = "";
-        }
-
-        if (second) {
-          document.getElementById("secondName").textContent = second.name;
-          document.getElementById("secondClub").textContent = second.club;
-          document.getElementById("secondTime").textContent = second.displayTime || "";
-        } else {
-          document.getElementById("secondName").textContent = "—";
-          document.getElementById("secondClub").textContent = "";
-          document.getElementById("secondTime").textContent = "";
-        }
+        const rows = Array.isArray(data.results) ? data.results : [];
+        rows.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "timetrial-row";
+          row.innerHTML = `
+            <div class="tt-name">${item.name || ''}</div>
+            <div class="tt-club">${item.club || ''}</div>
+            <div class="tt-time">${item.displayTime || '--:--,--'}</div>
+          `;
+          container.appendChild(row);
+        });
       }
 
       async function loadTimetrial(veld, compactNames) {
@@ -153,6 +134,7 @@
         const mode = String(state.mode || 'Timetrial');
 
         document.getElementById('veldLabel').textContent = veld || 'Alle velden';
+        document.getElementById('modeLabel').textContent = mode;
 
         if (/Startlijst/i.test(mode)) {
           await loadStartlist(veld);

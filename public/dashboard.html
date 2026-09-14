@@ -142,7 +142,7 @@
       const routeField = globalUrlToggle.checked ? '' : '?veld=' + encodeURIComponent(fieldName);
       const routeCat = isFinaleMode && modeCat ? '&cat=' + encodeURIComponent(modeCat) : '';
       const route = globalUrlToggle.checked ? '/overlay.html' : '/overlay.html' + routeField + routeCat;
-      const liveRoute = globalUrlToggle.checked ? '/live.html' : '/live.html' + routeField;
+      const liveRoute = globalUrlToggle.checked ? '/live.html' : '/live.html' + routeField + routeCat;
       const startlistRoute = globalUrlToggle.checked ? '/startlist.html' : '/startlist.html' + routeField;
 
       return {
@@ -186,7 +186,8 @@
           route: '/overlay.html',
           liveRoute: '/live.html',
           startlistRoute: '/startlist.html',
-          activeField
+          activeField,
+          activeCat: ''
         });
       } else {
         const activeField = dashboardPage.activeField || (dashboardPage.fields[0] && dashboardPage.fields[0].field) || '';
@@ -199,7 +200,8 @@
           route,
           liveRoute,
           startlistRoute,
-          activeField
+          activeField,
+          activeCat: ''
         });
       }
     });
@@ -246,6 +248,7 @@
             liveRoute: routePatch.liveRoute,
             startlistRoute: routePatch.startlistRoute,
             activeField: field.field,
+            activeCat: '',
             mode: routePatch.mode
           });
         });
@@ -279,6 +282,7 @@
               liveRoute: routePatch.liveRoute,
               startlistRoute: routePatch.startlistRoute,
               activeField,
+              activeCat: mode.cat || '',
               mode: routePatch.mode
             });
           });
