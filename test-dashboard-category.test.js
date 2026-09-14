@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 process.env.NODE_ENV = 'test';
-const { resolveFieldForPage, routeFieldFromRoute, routeCatFromRoute, isFamilyCategory, categoryMatchesFinalCategory } = await import('./server.js');
+const { resolveFieldForPage, routeFieldFromRoute, routeCatFromRoute, isFamilyCategory, categoryMatchesFinalCategory, selectLiveFastestAndLatest } = await import('./server.js');
 
 function normalizeBrowserSourceCat(cat) {
   return String(cat).replace(/F[A-Q]$/i, '');
@@ -53,11 +53,21 @@ test('field resolution prefers the page URL query string and falls back to route
   assert.equal(resolveFieldForPage('http://localhost:5000/overlay.html', '/overlay.html', 'H2x'), 'H2x');
 });
 
+test('live result selection must choose latest by the actual finish time rather than by raw array order', () => {
+  const rows = [
+    { name: 'Boot 1', finish: '15:32:00', finishMs: 15*60*60*1000 + 32*60*1000, ms: 12600, result: '00:00:12.6' },
+    { name: 'Boot 2', finish: '15:30:00', finishMs: 15*60*60*1000 + 30*60*1000, ms: 10600, result: '00:00:10.6' }
+  ];
+
+  const { fastest, latest } = selectLiveFastestAndLatest(rows);
+  assert.equal(fastest.name, 'Boot 2');
+  assert.equal(latest.name, 'Boot 1');
+});
+
 test('dashboard route parser can keep an exact family category in the route when a finale mode is chosen', () => {
   assert.equal(routeFieldFromRoute('/overlay.html?veld=Mix2x&cat=Mix2xFA'), 'Mix2x');
   assert.equal(routeCatFromRoute('/overlay.html?veld=Mix2x&cat=Mix2xFA'), 'Mix2xFA');
 });
-
 test('timetrial family rows must be classified out of the base timetrial payload even when the category includes a numbered family suffix', () => {
   assert.equal(isFamilyCategory('Mix2xFA1'), true);
   assert.equal(isFamilyCategory('Mix2xFA2'), true);

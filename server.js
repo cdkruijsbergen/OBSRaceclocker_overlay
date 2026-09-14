@@ -90,6 +90,59 @@ export function routeCatFromRoute(route) {
   }
 }
 
+export function selectLiveFastestAndLatest(rows) {
+  const timed = rows.filter(r => r.ms !== null && Number.isFinite(r.ms));
+  if (!timed.length) {
+    return { fastest: null, latest: null, diff: null, diffDisplay: null };
+  }
+
+  const fastest = [...timed].sort((a, b) => a.ms - b.ms)[0] || null;
+  const latest = [...timed].reduce((chosen, row) => {
+    if (!chosen) return row;
+
+    const chosenFinishMs = Number.isFinite(chosen.finishMs)
+      ? chosen.finishMs
+      : parseClockMs(String(chosen.finish || chosen.finishTime || ''));
+    const rowFinishMs = Number.isFinite(row.finishMs)
+      ? row.finishMs
+      : parseClockMs(String(row.finish || row.finishTime || ''));
+
+    if (chosenFinishMs === null && rowFinishMs === null) return chosen;
+    if (chosenFinishMs === null) return row;
+    if (rowFinishMs === null) return chosen;
+
+    return rowFinishMs > chosenFinishMs ? row : chosen;
+  }, null) || null;
+
+  if (!fastest || !latest) {
+    return { fastest: null, latest: null, diff: null, diffDisplay: null };
+  }
+
+  const diff = latest.ms - fastest.ms;
+
+  return {
+    fastest,
+    latest,
+    diff,
+    diffDisplay: diff === 0 ? '±0.00' : `${diff < 0 ? '-' : '+'}${formatMsToTime(Math.abs(diff))}`
+  };
+}
+
+export function parseClockMs(str) {
+  if (!str || String(str).trim() === '') return null;
+
+  const text = String(str).trim();
+  const parts = text.split(':');
+  if (parts.length !== 3) return null;
+
+  const h = Number.parseInt(parts[0], 10) || 0;
+  const m = Number.parseInt(parts[1], 10) || 0;
+  const s = Number.parseFloat(parts[2]);
+  if (!Number.isFinite(s)) return null;
+
+  return ((h * 60 * 60) + (m * 60) + s) * 1000;
+}
+
 export function resolveFieldForPage(pageUrl, route, activeField) {
   try {
     const url = new URL(pageUrl, 'http://localhost:5000');
@@ -358,18 +411,22 @@ async function fetchResults() {
 
   const mapped = allResults
     .map(row => {
-      const result = row.Result || "";
-      const ms = parseTimeToMs(result);
+      const result = cleanDisplayText(row.Result || "");
+      const resultMs = parseTimeToMs(result);
+      const finishTime = cleanDisplayText(row.TmSplit5 || "");
+      const finishMs = parseClockMs(finishTime);
 
       return {
         name: cleanDisplayText(row.Name || ""),
         cat: cleanDisplayText(row.Cat || ""),
         club: cleanDisplayText(row.Club || ""),
         start: cleanDisplayText(row.TmSplit1 || ""),
-        finish: cleanDisplayText(row.TmSplit5 || row.Result || ""),
-        result: cleanDisplayText(result),
+        finish: finishTime || result,
+        finishTime,
+        finishMs,
+        result,
         penalty: cleanDisplayText(row.Penalty || ""),
-        ms
+        ms: resultMs
       };
     });
 
@@ -638,16 +695,15 @@ app.get("/api/live", async (req, res) => {
       .filter(r => !isFamilyName(r.name))
       .filter(r => cat ? categoryMatchesFinalCategory(r.cat, cat) : !isFamilyCategory(r.cat));
 
-    const timed = filtered.filter(r => r.ms !== null);
-    const fastest = [...timed].sort((a, b) => a.ms - b.ms)[0] || null;
-    const latest = timed[timed.length - 1] || null;
+    const selected = selectLiveFastestAndLatest(filtered);
+    const fastest = selected.fastest;
+    const latest = selected.latest;
 
     if (!fastest || !latest) {
       res.json({ fastest: null, latest: null, diff: null, diffDisplay: null });
       return;
     }
 
-    const diff = latest.ms - fastest.ms;
     res.json({
       fastest: {
         ...fastest,
@@ -657,8 +713,8 @@ app.get("/api/live", async (req, res) => {
         ...latest,
         displayTime: formatMsToTime(latest.ms)
       },
-      diff,
-      diffDisplay: diff === 0 ? '±0.00' : `${diff < 0 ? '-' : '+'}${formatMsToTime(Math.abs(diff))}`
+      diff: selected.diff,
+      diffDisplay: selected.diffDisplay
     });
   } catch (e) {
     console.error(e);
